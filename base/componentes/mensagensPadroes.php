@@ -79,6 +79,6 @@ class mensagensPadroes
         </div>
 <?php
         $content = ob_get_clean();
-        interfacePadrao::render_args($content);
+        interfacePadrao::render_args($content, 'Bem Vindo');
     }
 }

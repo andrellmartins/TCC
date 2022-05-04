@@ -10,9 +10,10 @@ class interfacePadrao{
         $this->content = $content;
     }
 
-    public static function render_args($content){
+    public static function render_args($content,$titulo = ''){
         $main = new interfacePadrao;
         $main->setContent($content);
+        $main->setTitulo($titulo);
         $main->render();
     }
 
