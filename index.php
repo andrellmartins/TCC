@@ -7,6 +7,10 @@
 
     $requestFunction = getRequestFunction();
     if(function_exists($requestFunction))
-        $requestFunction();
+        try {
+            $requestFunction();
+        }catch(Throwable $t){
+            throw new error($t->getMessage(),$t->getCode(),$t);
+        }
     else
         die('Função não conhecida pelo sistema.');

@@ -8,11 +8,18 @@ function iniSystem(){
             return class_exists($className);
         }
     );
-    set_error_handler(
-        function($error_number, $error_message, $error_filename = 'no filename supplied', $error_line = 'no line supplied', $error_context = 'no context supplied'){
-            $error = new error_component($error_number, $error_message, $error_filename, $error_line, $error_context);
-            $error->showFullMessage();
-        }, E_ALL
+    $catchFunction = 
+    function($error_number, $error_message, $error_filename = 'no filename supplied', $error_line = 'no line supplied', $error_context = 'no context supplied'){
+        $error = new error_component($error_number, $error_message, $error_filename, $error_line, $error_context);
+        $error->showFullMessage();
+    };
+
+    set_error_handler($catchFunction,E_ALL);
+    set_exception_handler(
+        function($exception){
+            $exception = new error_component($exception->getCode(), $exception->getMessage(), $exception->getFile(), $exception->getLine(), $exception);
+            $exception->showFullMessage();
+        }
     );
 }
 

@@ -14,11 +14,11 @@ class pessoascontroller extends crudcontroller{
     }
 
     public function inclui(){
-        $insert = $this->model->inclui($this->post);
-        if($insert === true){
+        try{
+            $this->model->inclui($this->post);
             mensagensPadroes::insercaoBemSucedida();
-        }else{
-            mensagensPadroes::erroNaInsercao($insert);
+        }catch(Throwable $t){
+            mensagensPadroes::erroNaInsercao($t->getMessage());
         }
     }
     public function login(){
