@@ -42,7 +42,7 @@ class pessoas extends model{
                     $dados['cargo'] = '2';
                     break;
                 case '2'://farmaceutico
-                    $dados['cargo'] = '4';
+                    $dados['cargo'] = '3';
                     break;
             }
             $queryFuncionarios = $this->query(
