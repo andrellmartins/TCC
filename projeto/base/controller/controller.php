@@ -19,4 +19,6 @@ class controller{
     function getReqPath(){
         return reqpath('modulos'. DIRECTORY_SEPARATOR . $this->modulo . DIRECTORY_SEPARATOR);
     }
+
+
 }

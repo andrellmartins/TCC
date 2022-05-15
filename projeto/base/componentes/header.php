@@ -12,15 +12,15 @@ class header {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php echo ucfirst(strtolower($titulo)) ?></title>
     <!-- BOOTSTRAP -->
-    <link  rel="stylesheet"  href="?requestType=reqview&path=bootstrap/dist/css/bootstrap.css">
-    <script type="text/javascript" src="?requestType=reqview&path=bootstrap/dist/js/bootstrap.js"></script>
+    <link  rel="stylesheet"  href="?requestType=reqview&path=node_modules/bootstrap/dist/css/bootstrap.css">
+    <script type="text/javascript" src="?requestType=reqview&path=node_modules/bootstrap/dist/js/bootstrap.js"></script>
     
     <!-- JQUERY -->
-    <script type="text/javascript" src="?requestType=reqview&path=jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="?requestType=reqview&path=node_modules/jquery/dist/jquery.js"></script>
     <!-- JQUERY MASK -->
-    <script type="text/javascript" src="?requestType=reqview&path=jquery-mask-plugin/dist/jquery.mask.js"></script>
+    <script type="text/javascript" src="?requestType=reqview&path=node_modules/jquery-mask-plugin/dist/jquery.mask.js"></script>
     <!--SWAL-->
-    <script type="text/javascript" src="?requestType=reqview&path=sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="?requestType=reqview&path=node_modules/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <?php
         $head = ob_get_clean();

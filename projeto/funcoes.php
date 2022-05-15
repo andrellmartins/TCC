@@ -26,8 +26,9 @@ function iniSystem(){
 function loadClassFromFile($className){
     $className = strtolower($className);
     $modulo = filter_input(INPUT_GET,'modulo') ?? 'pessoas';
+    $inicio = $modulo == 'base' ? '' : 'modulos'.DIRECTORY_SEPARATOR;
     
-    $iniPath = syspath('modulos' . DIRECTORY_SEPARATOR . $modulo . DIRECTORY_SEPARATOR);
+    $iniPath = syspath($inicio . $modulo . DIRECTORY_SEPARATOR);
     $dirDiretorioBase = dir($iniPath);
     
     while($diretorioMVC = $dirDiretorioBase->read()){
@@ -71,7 +72,7 @@ function recursiveLoadFilesFromDirectory($directoryPath){
 function tratarRequisicaoReqview(){
     $path = filter_input(INPUT_GET,'path');
     
-    $path = syspath('base' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'node_modules' . DIRECTORY_SEPARATOR . $path);
+    $path = syspath('base' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . $path);
     if(file_exists($path)){
         echo file_get_contents($path);
     }else{
@@ -81,11 +82,12 @@ function tratarRequisicaoReqview(){
 }
 function tratarRequisicaoNormal(){
     $modulo = filter_input(INPUT_GET,'modulo') ?? 'pessoas';
+    $inicio = $modulo == 'base' ? '' : 'modulos'.DIRECTORY_SEPARATOR;
     $programa = (filter_input(INPUT_GET,'programa') ?? 'pessoas');
     $controller = $programa . 'controller';
     $acao = filter_input(INPUT_GET,'acao') ?? 'main';
     
-    $path = syspath('modulos' . DIRECTORY_SEPARATOR . $modulo . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . "{$controller}.php");
+    $path = syspath($inicio . $modulo . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . "{$controller}.php");
     if(file_exists($path)){
         include_once $path;
     }else{

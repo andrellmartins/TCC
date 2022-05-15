@@ -83,6 +83,37 @@ class pessoas extends model{
         return true;
     }
 
+
+    /*public function exclui($id){
+        $this->begin_transaction();
+        $queryPessoas = $this->query(
+            "DELETE FROM pessoas WHERE id = $id"
+        );
+        if(!$queryPessoas) {
+            $msgError = $this->error;
+            $this->rollback();
+            return $msgError;
+        }
+        $this->commit();
+        return true;
+    }*/
+
+    public function listar($dados){
+        $this->begin_transaction();
+        $queryPessoas = $this->query(
+            "select * FROM pessoas"
+        );
+        if(!$queryPessoas) {
+            $msgError = $this->error;
+            $this->rollback();
+            return $msgError;
+        }
+        $this->commit();
+        return true;
+    }
+
+    
+
     
 
 }

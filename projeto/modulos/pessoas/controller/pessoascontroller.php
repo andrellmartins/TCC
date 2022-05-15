@@ -21,6 +21,26 @@ class pessoascontroller extends crudcontroller{
             mensagensPadroes::erroNaInsercao($t->getMessage());
         }
     }
+
+    public function exclui(){
+        try{
+            $this->model->del($this->post);
+            mensagensPadroes::insercaoBemSucedida();
+        }catch(Throwable $t){
+            mensagensPadroes::erroNaInsercao($t->getMessage());
+        }
+    }
+
+    public function listar(){
+        try{
+            $this->model->listar($this->get);
+            //mensagensPadroes::($t->getMessage());
+        }catch(Throwable $t){
+            mensagensPadroes::erroNaInsercao($t->getMessage());
+        }
+    }
+
+
     public function login(){
         $username = filter_input(INPUT_POST,'username');
         $password = filter_input(INPUT_POST,'password');
@@ -31,11 +51,10 @@ class pessoascontroller extends crudcontroller{
             mensagensPadroes::erroNoLogin();
             exit;
         }
-        Header('Location: ?modulo=pessoas&programa=pessoas&acao=index');
+        Header('Location: ?modulo=base&programa=menu&acao=menu');
+        
     }
-    public function index(){
-        mensagensPadroes::msgBemVindo();
-    }
+
     public function logoff(){
         session_destroy();
         Header('Location: ?');
@@ -48,6 +67,7 @@ class pessoascontroller extends crudcontroller{
         $interface->setContent($content);
         $interface->render();
     }
+
     
     public function formCadastro(){
         $cadastro = new cadastro;
@@ -56,5 +76,16 @@ class pessoascontroller extends crudcontroller{
         $interface->setTitulo('cadastro');
         $interface->setContent($content);
         $interface->render();
+    }
+
+    public function grid()
+    {
+        $grid = new grid;
+        $content = navbar::render(true).$grid->render(true);
+        $interface = new interfacePadrao;
+        $interface->setTitulo('menu');
+        $interface->setContent($content);
+        $interface->render();
+        
     }
 }
