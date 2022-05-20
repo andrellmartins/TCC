@@ -13,14 +13,10 @@ class usuario extends model{
         if(!$query->num_rows == 1){
             return false;
         }
-        if(session_status() == PHP_SESSION_NONE)
-            session_start();
         $_SESSION['usuarioLogado'] = $query->fetch_assoc();
         return true;
     }
     public function auth(){
-        if(session_status() == PHP_SESSION_NONE)
-            session_start();
         return isset($_SESSION['usuarioLogado']);
     }
 }

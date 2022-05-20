@@ -13,6 +13,15 @@ class pessoascontroller extends crudcontroller{
         }
     }
 
+    public function inicio(){
+        $navbar = Navbar::render(true);
+
+        $interface = new interfacePadrao;
+        $interface->setTitulo('Gerenciador de Pessoas');
+        $interface->setContent($navbar . gerenciador_pessoas::returnGrid());
+        $interface->render();
+    }
+
     public function inclui(){
         try{
             $this->model->inclui($this->post);
@@ -51,7 +60,7 @@ class pessoascontroller extends crudcontroller{
             mensagensPadroes::erroNoLogin();
             exit;
         }
-        Header('Location: ?modulo=base&programa=menu&acao=menu');
+        Header('Location: ?modulo=base&programa=home');
         
     }
 

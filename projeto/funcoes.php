@@ -97,6 +97,8 @@ function tratarRequisicaoNormal(){
     if(!class_exists($controller)){
         die('classe não existe');
     }
+    //validou se o programa, classe e metodo existem, então Inicia sessão.
+    session_start();
     $classe = new $controller($modulo);
 
     if(!method_exists($classe,$acao)){

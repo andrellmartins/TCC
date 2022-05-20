@@ -5,27 +5,41 @@
         public static function render($return = false){
             ob_start();
             ?>
-            <nav class="navbar navbar-dark bg-primary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
-                        <img src="?requestType=reqview&path=\logo-clinilog.png" alt="" width="30" height="24" class="d-inline-block align-text-top"> CliniLog
-                    </a>
-                </div>
-                <div id="navbarNavDropdown" class="container-fluid">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown link
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li> 
-                    </ul>
-                </div>
-            </nav>
+
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="?modulo=base&programa=home">
+      <img src="?requestType=reqview&path=\logo-clinilog.png" alt="" width="30" height="24" class="d-inline-block align-text-top"> CliniLog
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbar_dropdown_pessoas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Módulo de pessoas
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbar_dropdown_pessoas">
+            <li><a class="dropdown-item" href="?modulo=pessoas&programa=pessoas&acao=inicio">Gerenciador de Pessoas</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbar_dropdown_estoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Módulo de Estoque
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbar_dropdown_estoque">
+            <li><a class="dropdown-item" href="#">Gerenciador de Produtos</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="?modulo=pessoas&programa=pessoas&acao=logoff">Sair</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
         <?php
         $content = ob_get_clean();
         if($return){

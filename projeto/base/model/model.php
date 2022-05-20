@@ -38,40 +38,5 @@ class model{
             eval("$createClass{}");
         }
     }
-    public function crud($dados,$acaoCRUD){
-        $this->logcrud($dados,$acaoCRUD);
-        if(method_exists($this,$acaoCRUD)){
-            $this->$acaoCRUD($dados);
-        }
-    }
-    // formulario{
-    //     tipoDeCampo[
-    //         caracter TAMANHO MASCARA
-    //         int TAMANHO INT, TAMANHO DECIMAL
-    //         selecao de dados(Pequeno) {chave:valor,chave:valor,...}
-    //         ligacaoTabela(Grande) / {[chave:chave,campo1,campo2,campo3,...],...}
-    //         data RETROATIVO ? FUTURO ? type date
-    //         radio[selecao de dados Pequena] [chave:valor,chave:valor,...]
-    //         checkbox(on/off) titulo
-    //     ]
-    // }
-    // public function inclui($dados){
-    //     $sql = 
-    //         'SELECT tc.* 
-    //         FROM tabelas_coluna tc 
-    //             INNER JOIN tabelas t 
-    //                 ON t.id=tc.id_tabela
-    //                 AND t.nomeTabela=\''.get_class($this).'\'';
-    //     $query = $this->query($sql);
-    //     while($campo = $query->fetch_assoc()){
-    //         $valorCampo = $dados[$campo['nome']];
-    //         if($campo['obrigatorio']){
-    //         }
-    //     }
-    // }
-
-    // public function validarCampoEntrada($campo,$valor){
-        
-    // }
 
 }
