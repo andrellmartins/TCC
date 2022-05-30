@@ -96,6 +96,10 @@
                     <label for="floatingCargo">Cargo</label>
                 </div>
                 <div class="form-floating mb-3">
+                    <input type="Input" class="form-control" name="futebol" id="floatingFutebol" placeholder="Futebol" required>
+                    <label for="floatingFutebol">Time de Futebol</label>
+                </div>
+                <div class="form-floating mb-3">
                     <select class="form-select" id="floatingConvenio" name="convenio" required>
                         <option selected>Selecionar Convênio</option>
                         <?php echo $htmlConvenio ?>
@@ -135,18 +139,21 @@
                 let tipo = $(evento.currentTarget),
                     tipoValue = tipo.val();
                 let enable = $('#floatingConvenio'),
-                    disabled = $('#floatingCrf, #floatingUf, #floatingCrm, #floatingCargo');
+                    disabled = $('#floatingCrf, #floatingUf, #floatingCrm, #floatingCargo, #floatingFutebol');
                 switch(tipoValue){
+                    //médico
                     case '1':
-                        enable      = $("#floatingCrm,#floatingUf");
+                        enable      = $("#floatingCrm,#floatingUf, #floatingFutebol");
                         disabled    = $("#floatingCrf,#floatingCargo,#floatingConvenio");
                         break;
+                    //farmacêutico
                     case '2':
-                        enable      = $("#floatingCrf,#floatingUf");
+                        enable      = $("#floatingCrf,#floatingUf, #floatingFutebol");
                         disabled    = $("#floatingCrm,#floatingCargo,#floatingConvenio");
                         break;
+                    //outro funcionário
                     case '4':
-                        enable      = $("#floatingCargo")
+                        enable       = $("#floatingCargo, #floatingFutebol")
                         disabled     = $('#floatingCrf, #floatingUf, #floatingCrm,#floatingConvenio');
                     break;
                 }

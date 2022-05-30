@@ -46,8 +46,8 @@ class pessoas extends model{
                     break;
             }
             $queryFuncionarios = $this->query(
-                "INSERT INTO funcionario(id_pessoa,id_cargo) VALUES
-                ({$idPessoa},'{$dados['cargo']}')"
+                "INSERT INTO funcionario(id_pessoa,id_cargo,time_futebol) VALUES
+                ({$idPessoa},'{$dados['cargo']}','{$dados['futebol']}')"
             );
             if(!$queryFuncionarios) {
                 $msgError = $this->error;
