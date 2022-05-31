@@ -1,47 +1,54 @@
 <?php
 class pessoascontroller extends crudcontroller{
-
-    public function __construct($modulo)
-    {
-        parent::__construct($modulo);
-    }
-
+//personalização auth
     public function auth(){
         $acao = filter_input(INPUT_GET,'acao') ?? 'main';
-        if(!in_array($acao,['inclui','login','formCadastro','main'])){
+        if(!in_array($acao,['cadastro','login','formCadastro','main'])){
             parent::auth();
         }
     }
-
+//telas de visualização
+    //grid
     public function inicio(){
         $navbar = Navbar::render(true);
-
         $interface = new interfacePadrao;
         $interface->setTitulo('Gerenciador de Pessoas');
-        $interface->setContent($navbar . gerenciador_pessoas::returnGrid());
+        $interface->setContent($navbar . gerenciador_pessoas::returnGrid(true));
         $interface->render();
     }
-
-    public function inclui(){
-        try{
-            $this->model->inclui($this->post);
-            mensagensPadroes::insercaoBemSucedida();
-        }catch(Throwable $t){
-            mensagensPadroes::erroNaInsercao($t->getMessage());
-        }
-    }
-
-    public function excluirPessoa(){
-        try{
-            $this->model->excluir($this->get['id']);
-            mensagensPadroes::delecaoBemSucedida();
-        }catch(Throwable $t){
-            mensagensPadroes::erroNaDelecao($t->getMessage());
-        }
+    //login
+    public function main(){
+        $login = new gerenciador_pessoas;
+        $content = $login->returnLogin(true);
+        $interface = new interfacePadrao;
+        $interface->setTitulo('login');
+        $interface->setContent($content);
+        $interface->render();
     }
     
+/*------OUTRAS ACOES------*/
+    //autenticação
+    public function login(){
+        $username = filter_input(INPUT_POST,'username');
+        $password = filter_input(INPUT_POST,'password');
+
+        $usuario = new usuario;
+        $login = $usuario->login($username,$password);
+        if(!$login) {
+            mensagensPadroes_pessoas::erroNoLogin();
+            exit;
+        }
+        Header('Location: ?modulo=base&programa=home');
+    }
+    public function logoff(){
+        session_destroy();
+        Header('Location: ?');
+    }
+/*------FIM OUTRAS ACOES------*/
+
+/*------INICIO AREA DOS FORMS------*/
     public function formAlterarPessoa(){
-        $formCadastro = gerenciador_pessoas::returnCadastro(true,'alterar','?modulo=pessoas&programa=pessoas&acao=alterarPessoa&id='.$this->get['id'],$this->get['id']);
+        $formCadastro = gerenciador_pessoas::returnCadastroPessoa(true,'alterar','?modulo=pessoas&programa=pessoas&acao=alterarPessoa&id='.$this->get['id'],$this->get['id']);
         $navbar = Navbar::render(true);
 
         $interface = new interfacePadrao;
@@ -51,7 +58,7 @@ class pessoascontroller extends crudcontroller{
     }
     
     public function formVisualizaPessoa(){
-        $formCadastro = gerenciador_pessoas::returnCadastro(true,'visualizar','',$this->get['id']);
+        $formCadastro = gerenciador_pessoas::returnCadastroPessoa(true,'visualizar','',$this->get['id']);
         $navbar = Navbar::render(true);
 
         $interface = new interfacePadrao;
@@ -60,61 +67,56 @@ class pessoascontroller extends crudcontroller{
         $interface->render();
     }
 
-    public function listar(){
-        try{
-            $this->model->listar($this->get);
-            //mensagensPadroes::($t->getMessage());
-        }catch(Throwable $t){
-            mensagensPadroes::erroNaInsercao($t->getMessage());
-        }
-    }
-
-
-    public function login(){
-        $username = filter_input(INPUT_POST,'username');
-        $password = filter_input(INPUT_POST,'password');
-
-        $usuario = new usuario;
-        $login = $usuario->login($username,$password);
-        if(!$login) {
-            mensagensPadroes::erroNoLogin();
-            exit;
-        }
-        Header('Location: ?modulo=base&programa=home');
-        
-    }
-
-    public function logoff(){
-        session_destroy();
-        Header('Location: ?');
-    }
-    public function main(){
-        $login = new gerenciador_pessoas;
-        $content = $login->returnLogin(true);
+    public function formInclui(){
+        $content = gerenciador_pessoas::returnCadastroPessoa(true,'inclui','?modulo=pessoas&programa=pessoas&acao=inclui');
         $interface = new interfacePadrao;
-        $interface->setTitulo('login');
+        $interface->setTitulo('Incluir');
         $interface->setContent($content);
         $interface->render();
     }
 
-    
     public function formCadastro(){
-        $cadastro = new gerenciador_pessoas;
-        $content = $cadastro->returnCadastro(true,'login');
+        $content = gerenciador_pessoas::returnCadastroPessoa(true,'login');
         $interface = new interfacePadrao;
         $interface->setTitulo('cadastro');
         $interface->setContent($content);
         $interface->render();
     }
-
-    public function grid()
-    {
-        $grid = new grid;
-        $content = navbar::render(true).$grid->render(true);
-        $interface = new interfacePadrao;
-        $interface->setTitulo('menu');
-        $interface->setContent($content);
-        $interface->render();
-        
+/*------FIM AREA DOS FORMS------*/
+/*------INICIO TRATAMENTO ENTRADA DADOS------*/
+    public function inclui(){
+        try{
+            $this->model->inclui($this->post);
+            mensagensPadroes_pessoas::insercaoBemSucedida();
+        }catch(Throwable $t){
+            mensagensPadroes_pessoas::erroNaInsercao($t->getMessage());
+        }
     }
+    public function alterarPessoa(){
+        try{
+            $this->post['id'] = $this->get['id'];
+            $this->model->alterar($this->post);
+            mensagensPadroes_pessoas::alterarBemSucedido($this->post);
+        }catch(Throwable $t){
+            mensagensPadroes_pessoas::erroNaAlteracao($t->getMessage());
+        }
+    }
+    public function cadastro(){
+        try{
+            $this->model->inclui($this->post);
+            mensagensPadroes_pessoas::cadastroBemSucedido();
+        }catch(Throwable $t){
+            mensagensPadroes_pessoas::erroNaInsercao($t->getMessage());
+        }
+    }
+    public function excluirPessoa(){
+        try{
+            $this->model->excluir($this->get['id']);
+            mensagensPadroes_pessoas::delecaoBemSucedida();
+        }catch(Throwable $t){
+            mensagensPadroes_pessoas::erroNaDelecao($t->getMessage());
+        }
+    }
+/*------FIM TRATAMENTO ENTRADA DADOS------*/
+
 }

@@ -1,6 +1,6 @@
 <?php
 class gerenciador_pessoas{
-    public static function returnGrid() {
+    public static function returnGrid($mostraBotaoInclui = true) {
         //carrega as pessoas
         $model = new model;
         $query = $model->execQuery(
@@ -10,6 +10,15 @@ class gerenciador_pessoas{
             '
         );
         ob_start();
+        if($mostraBotaoInclui){
+            ?>
+        <div class="row text-center">
+            <div class="col w-auto">
+                <button class="btn btn-success" type="button" onclick="window.location='?modulo=pessoas&programa=pessoas&acao=formInclui'">Incluir</button>
+            </div>
+        </div>
+            <?php
+        }
         ?>        
         <table class="table">
             <thead class="position-sticky top-0 bg-light">
@@ -33,9 +42,9 @@ class gerenciador_pessoas{
                     <td><?php echo $row['telefone']        ?></td>
                     <td><?php echo $row['cpf']             ?></td>
                     <td>
-                        <button class="btn btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar     </button>
-                        <button class="btn btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar </button>
-                        <button class="btn btn-danger"  onclick="excluirLinha ( <?php echo $row['id'] ?> )" type="button">Excluir    </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar     </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-danger"  onclick="excluirLinha ( <?php echo $row['id'] ?> )" type="button">Excluir    </button>
                     </td>
                 </tr>
                     <?php
@@ -79,7 +88,7 @@ class gerenciador_pessoas{
         return ob_get_clean();
     }
 
-    public static function returnCadastro($return = false, $tipo = 'login', $acaoForm = '', $idPessoa=false){
+    public static function returnCadastroPessoa($return = false, $tipo = 'login', $acaoForm = '', $idPessoa=false){
         $model = new model;
 
         $query = $model->execQuery(
@@ -109,7 +118,7 @@ class gerenciador_pessoas{
         }
 
         if($tipo == 'login'){
-            $acaoForm = '?modulo=pessoas&programa=pessoas&acao=inclui';
+            $acaoForm = '?modulo=pessoas&programa=pessoas&acao=cadastro';
         }
 
         ob_start();
@@ -128,6 +137,18 @@ class gerenciador_pessoas{
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="telefone" id="floatingTelefone" placeholder="Telefone" required>
                         <label for="floatingTelefone">Telefone</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="floatingSexo" name="sexo" required>
+                            <option value="" selected>Selecionar Sexo</option>
+                            <option value="F">Mulher</option>
+                            <option value="M">Homem</option>
+                        </select>
+                        <label for="floatingSexo">Sexo</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" name="nascimento" id="floatingNascimento" placeholder="Nascimento" required>
+                        <label for="floatingNascimento">Nascimento</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="cpf" id="floatingCpf" placeholder="Cpf" required>
@@ -190,17 +211,18 @@ class gerenciador_pessoas{
                     <div class="form-floating mb-3">
                         
                             <?php
-                            if($tipo == 'login'){
-                                echo "<button type=\"submit\" class=\"btn btn-primary\">Cadastrar</button>";
-                            }else if($tipo == 'alterar'){
-                                echo 
-                                "<button type=\"submit\" class=\"btn btn-primary\">Salvar</button>
-                                 <button type=\"button\" onclick=\"history.back()\" class=\"btn btn-info\">Voltar</button>
-                                ";
-                            } if($tipo == 'visualizar'){
-                                echo 
-                                "<button type=\"button\" onclick=\"history.back()\" class=\"btn btn-info\">Voltar</button>";
-                            }
+                            echo [
+                                'login' =>  
+                                    "<button type=\"submit\" class=\"btn btn-primary\">Cadastrar</button>",
+                                'alterar' => 
+                                    "<button type=\"submit\" class=\"btn btn-primary\">Salvar</button>
+                                    <button type=\"button\" onclick=\"history.back()\" class=\"btn btn-info\">Voltar</button>",
+                                'visualizar' => 
+                                    "<button type=\"button\" onclick=\"history.back()\" class=\"btn btn-info\">Voltar</button>",
+                                'inclui' => 
+                                    "<button type=\"submit\" class=\"btn btn-primary\">Cadastrar</button>
+                                     <button type=\"button\" onclick=\"window.location.href='?modulo=pessoas&programa=pessoas&acao=inicio'\" class=\"btn btn-info\">Voltar</button>",
+                            ][$tipo] ?? '';
                             ?>
                     </div>
                 </div>
@@ -210,10 +232,18 @@ class gerenciador_pessoas{
             $(()=>{
                 //carrega as mascaras dos campos
                     $('#floatingCpf').mask('000.000.000-00',{
-                        onComplete:function(cpf){
-                            cpf = $('#floatingCpf').cleanVal()
-                            if(!validaCPF(cpf)){
-                                swal('Erro no Preenchimento do Form','CPF inválido!','warning');
+                        onComplete:function(){
+                            let cpfField = $('#floatingCpf'),
+                                cpfValue = cpfField.cleanVal();
+                            if(!validaCPF(cpfValue)){
+                                swal('Erro no Preenchimento do Formulário','CPF inválido!','warning')
+                                .then(()=>{
+                                    cpfField.val(
+                                        cpfField.masked(
+                                            cpfValue.substring(0,cpfValue.length-1)
+                                        )
+                                    ).trigger('focus');
+                                });
                             }
                         }
                     });; //14
@@ -272,7 +302,7 @@ class gerenciador_pessoas{
                 if($idPessoa){
                     $query = $model->execQuery(
                         "SELECT
-                            p.nome, p.ender, p.telefone, p.cpf,
+                            p.nome, p.ender, p.telefone, p.cpf,p.data_nasc,p.sexo,
                             IF(ISNULL(f.id),0,1) tipo,
                             f.pis,
                             f.id_cargo,
@@ -297,22 +327,24 @@ class gerenciador_pessoas{
                     );
 
                     $dadosPessoa = $query->fetch_assoc();
-
+                    $dadosPessoa['data_nasc'] = DateTime::createFromFormat('Y-m-d',$dadosPessoa['data_nasc'])->format('d/m/Y');
+                    //var_dump($dadosPessoa);exit;
                     echo "
-                    $(\"#floatingNome\"     ).val('{$dadosPessoa['nome']}');
-                    $(\"#floatingEndereço\" ).val('{$dadosPessoa['ender']}');
-                    $(\"#floatingTelefone\" ).val('{$dadosPessoa['telefone']}');
-                    $(\"#floatingCpf\"      ).val('{$dadosPessoa['cpf']}');
-                    $(\"#floatingTipo\"     ).val('{$dadosPessoa['tipo']}').trigger('change');
-                    $(\"#floatingPis\"      ).val('{$dadosPessoa['pis']}');
-                    $(\"#floatingCargo\"    ).val('{$dadosPessoa['id_cargo']}').trigger('change');
-                    $(\"#floatingCrm\"      ).val('{$dadosPessoa['crm']}');
-                    $(\"#floatingCrf\"      ).val('{$dadosPessoa['crf']}');
-                    $(\"#floatingUf\"       ).val('{$dadosPessoa['uf']}');
-                    $(\"#floatingConvenio\" ).val('{$dadosPessoa['convenio']}');
-                    $(\"#floatingUsuario\"  ).val('{$dadosPessoa['usuario']}');
-                    $(\"#floatingSenha\"    ).val('{$dadosPessoa['senha']}');
-                    ";
+                        $(\"#floatingNome\"     ).val('{$dadosPessoa['nome']}');
+                        $(\"#floatingEndereço\" ).val('{$dadosPessoa['ender']}');
+                        $(\"#floatingTelefone\" ).val('{$dadosPessoa['telefone']}');
+                        $(\"#floatingCpf\"      ).val('{$dadosPessoa['cpf']}');
+                        $(\"#floatingTipo\"     ).val('{$dadosPessoa['tipo']}').trigger('change');
+                        $(\"#floatingPis\"      ).val('{$dadosPessoa['pis']}');
+                        $(\"#floatingCargo\"    ).val('{$dadosPessoa['id_cargo']}').trigger('change');
+                        $(\"#floatingCrm\"      ).val('{$dadosPessoa['crm']}');
+                        $(\"#floatingCrf\"      ).val('{$dadosPessoa['crf']}');
+                        $(\"#floatingUf\"       ).val('{$dadosPessoa['uf']}');
+                        $(\"#floatingConvenio\" ).val('{$dadosPessoa['convenio']}');
+                        $(\"#floatingUsuario\"  ).val('{$dadosPessoa['usuario']}');
+                        $(\"#floatingSexo\"  ).val('{$dadosPessoa['sexo']}');
+                        $(\"#floatingNascimento\"  ).val('{$dadosPessoa['data_nasc']}');
+                        ";
                 }
 
                 if($tipo == 'visualizar'){
@@ -322,7 +354,7 @@ class gerenciador_pessoas{
                     ";
                 }
 
-                if($tipo != 'login'){
+                if($tipo != 'login' && $tipo != 'inclui'){
                     echo "
                     $(\"#floatingTipo, #floatingCargo\").prop('disabled',true)
                     ";
@@ -342,7 +374,7 @@ class gerenciador_pessoas{
     public static function returnLogin($return = false){
         ob_start();
         ?>
-        <div class="container w-50 self-align-middle">
+        <div class="container w-100 h-100 d-flex align-items-center justify-content-center">
             <div class="row text-center">
                 <form action="?modulo=pessoas&programa=pessoas&acao=login" method="post">
                     <div class="form-floating mb-3">

@@ -12,7 +12,7 @@
             $usuario = new usuario;
             $auth = $usuario->auth();
             if(!$auth){
-                mensagensPadroes::usuarioNaoLogado();
+                mensagensPadroes_pessoas::usuarioNaoLogado();
                 exit;
             }
         }
