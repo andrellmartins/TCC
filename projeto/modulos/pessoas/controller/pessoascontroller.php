@@ -100,7 +100,7 @@ class pessoascontroller extends crudcontroller{
     
     public function formCadastro(){
         $cadastro = new gerenciador_pessoas;
-        $content = $cadastro->returnCadastro(true,true);
+        $content = $cadastro->returnCadastro(true,'login');
         $interface = new interfacePadrao;
         $interface->setTitulo('cadastro');
         $interface->setContent($content);
