@@ -3,9 +3,9 @@ class pessoas extends model{
     
     public function inclui($dados){
         $this->begin_transaction();
-        $queryPessoas = $this->query(
-            "INSERT INTO pessoas(nome,ender,telefone,cpf,pis,id_tipo) VALUES 
-            ('{$dados['nome']}','{$dados['endereco']}','{$dados['telefone']}','{$dados['cpf']}','{$dados['pis']}',{$dados['tipo']})"
+        $queryPessoas = $this->execQuery(
+            "INSERT INTO pessoas(nome,ender,telefone,cpf) VALUES 
+            ('{$dados['nome']}','{$dados['endereco']}','{$dados['telefone']}','{$dados['cpf']}')"
         );
         if(!$queryPessoas) {
             $msgError = $this->error;
@@ -14,7 +14,7 @@ class pessoas extends model{
         }
         
         $idPessoa = $this->insert_id;
-        $queryUsuario = $this->query(
+        $queryUsuario = $this->execQuery(
             "INSERT INTO usuarios(id_pessoa,usuario,senha) VALUES 
             ({$idPessoa},'{$dados['usuario']}','{$dados['senha']}')"
         );
@@ -25,8 +25,8 @@ class pessoas extends model{
         }
         
 
-        if($dados['tipo'] == '4'){
-            $queryPacientes = $this->query(
+        if($dados['tipo'] == '0'){
+            $queryPacientes = $this->execQuery(
                 "INSERT INTO pacientes(id_pessoa,id_convenio) VALUES
                 ({$idPessoa},'{$dados['convenio']}')"
             );
@@ -37,17 +37,9 @@ class pessoas extends model{
             }
             
         }else{
-            switch($dados['tipo']){
-                case '1'://medico
-                    $dados['cargo'] = '2';
-                    break;
-                case '2'://farmaceutico
-                    $dados['cargo'] = '3';
-                    break;
-            }
-            $queryFuncionarios = $this->query(
-                "INSERT INTO funcionario(id_pessoa,id_cargo,time_futebol) VALUES
-                ({$idPessoa},'{$dados['cargo']}','{$dados['futebol']}')"
+            $queryFuncionarios = $this->execQuery(
+                "INSERT INTO funcionario(id_pessoa,id_cargo,pis) VALUES
+                ({$idPessoa},'{$dados['cargo']}','{$dados['pis']}')"
             );
             if(!$queryFuncionarios) {
                 $msgError = $this->error;
@@ -55,8 +47,9 @@ class pessoas extends model{
                 return $msgError;
             }
             $idFuncionario = $this->insert_id;
-            if($dados['tipo'] == '1'){
-                $queryMedico = $this->query(
+            //id do médico no banco é 2
+            if($dados['cargo'] == '2'){
+                $queryMedico = $this->execQuery(
                     "INSERT INTO medico(id_funcionario,crm,id_uf_crm) VALUES
                     ('{$idFuncionario}','{$dados['crm']}','{$dados['uf']}')"
                 );
@@ -66,8 +59,9 @@ class pessoas extends model{
                     return $msgError;
                 }
             }
-            if($dados['tipo'] == '2'){
-                $queryFarmaceutico = $this->query(
+            //id do médico no banco é 3
+            if($dados['cargo'] == '3'){
+                $queryFarmaceutico = $this->execQuery(
                     "INSERT INTO farmaceutico(id_funcionario,crf,id_uf_crf) VALUES
                     ('{$idFuncionario}','{$dados['crf']}','{$dados['uf']}')"
                 );
@@ -84,36 +78,24 @@ class pessoas extends model{
     }
 
 
-    /*public function exclui($id){
+    public function excluir($id){
         $this->begin_transaction();
-        $queryPessoas = $this->query(
-            "DELETE FROM pessoas WHERE id = $id"
-        );
-        if(!$queryPessoas) {
-            $msgError = $this->error;
-            $this->rollback();
-            return $msgError;
+        
+        $queryPessoa = $this->execQuery("SELECT * FROM pessoas p WHERE p.id=$id AND p.deletado=FALSE");
+        if($queryPessoa->num_rows == 0){
+            throw new Exception('Pessoa não existe');
         }
-        $this->commit();
-        return true;
-    }*/
 
-    public function listar($dados){
-        $this->begin_transaction();
-        $queryPessoas = $this->query(
-            "select * FROM pessoas"
-        );
-        if(!$queryPessoas) {
-            $msgError = $this->error;
-            $this->rollback();
-            return $msgError;
+        $this->execQuery("
+            UPDATE pessoas SET deletado=TRUE WHERE id=$id
+        ");
+
+        if($this->affected_rows != 1){
+            throw new Exception('Erro ao deletar pessoa');
         }
+
         $this->commit();
         return true;
     }
-
-    
-
-    
 
 }

@@ -21,6 +21,8 @@ class header {
     <script type="text/javascript" src="?requestType=reqview&path=node_modules/jquery-mask-plugin/dist/jquery.mask.js"></script>
     <!--SWAL-->
     <script type="text/javascript" src="?requestType=reqview&path=node_modules/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- custom js File -->
+    <script type="text/javascript" src="?requestType=reqview&path=js/funcoes.js"></script>
 </head>
 <?php
         $head = ob_get_clean();

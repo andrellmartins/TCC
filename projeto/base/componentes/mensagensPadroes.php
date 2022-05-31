@@ -58,8 +58,8 @@ class mensagensPadroes
         ob_start();
     ?>
         <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Usuário Deletado com sucesso!</h4>
-            <p>Usuário foi deletado com sucesso</p>
+            <h4 class="alert-heading">Pessoa Deletada com sucesso!</h4>
+            <p>Pessoa foi deletado com sucesso, clique <a href="?modulo=pessoas&programa=pessoas&acao=inicio">aqui</a> para voltar para o grid</p>
             <hr>
         </div>
     <?php

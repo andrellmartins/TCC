@@ -31,13 +31,33 @@ class pessoascontroller extends crudcontroller{
         }
     }
 
-    public function exclui(){
+    public function excluirPessoa(){
         try{
-            $this->model->del($this->post);
-            mensagensPadroes::insercaoBemSucedida();
+            $this->model->excluir($this->get['id']);
+            mensagensPadroes::delecaoBemSucedida();
         }catch(Throwable $t){
-            mensagensPadroes::erroNaInsercao($t->getMessage());
+            mensagensPadroes::erroNaDelecao($t->getMessage());
         }
+    }
+    
+    public function formAlterarPessoa(){
+        $formCadastro = gerenciador_pessoas::returnCadastro(true,'alterar','?modulo=pessoas&programa=pessoas&acao=alterarPessoa&id='.$this->get['id'],$this->get['id']);
+        $navbar = Navbar::render(true);
+
+        $interface = new interfacePadrao;
+        $interface->setTitulo('Gerenciador de Pessoas - Alterar');
+        $interface->setContent($navbar . $formCadastro);
+        $interface->render();
+    }
+    
+    public function formVisualizaPessoa(){
+        $formCadastro = gerenciador_pessoas::returnCadastro(true,'visualizar','',$this->get['id']);
+        $navbar = Navbar::render(true);
+
+        $interface = new interfacePadrao;
+        $interface->setTitulo('Gerenciador de Pessoas - Visualizar');
+        $interface->setContent($navbar . $formCadastro);
+        $interface->render();
     }
 
     public function listar(){
@@ -69,8 +89,8 @@ class pessoascontroller extends crudcontroller{
         Header('Location: ?');
     }
     public function main(){
-        $login = new login;
-        $content = $login->render(true);
+        $login = new gerenciador_pessoas;
+        $content = $login->returnLogin(true);
         $interface = new interfacePadrao;
         $interface->setTitulo('login');
         $interface->setContent($content);
@@ -79,8 +99,8 @@ class pessoascontroller extends crudcontroller{
 
     
     public function formCadastro(){
-        $cadastro = new cadastro;
-        $content = $cadastro->render(true);
+        $cadastro = new gerenciador_pessoas;
+        $content = $cadastro->returnCadastro(true,true);
         $interface = new interfacePadrao;
         $interface->setTitulo('cadastro');
         $interface->setContent($content);

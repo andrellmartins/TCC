@@ -19,6 +19,16 @@ class model{
         return model::$conn->inserted_id;
     }
     
+
+    public function execQuery($comandoExec){
+        $query = model::$conn->query($comandoExec);
+        if($query){
+            return $query;
+        }
+        
+        throw new mysqli_sql_exception(model::$conn->error,model::$conn->errno);
+    }
+
     private function getInstance() 
     {
         if(!isset(model::$conn)){
@@ -28,15 +38,13 @@ class model{
     }
 
     public function loadClassFromDatabase($className){
-        $query = $this->query("SELECT nome,extends FROM classes WHERE nome='$className'");
-        if($query->num_rows == 1){
-            $row = $query->fetch_assoc();
-            $createClass = "class {$row['nome']}";
-            if($row['extends'] != NULL){
-                $createClass .=" extends {$row['extends']}";
-            }
-            eval("$createClass{}");
+        $query = $this->execQuery("SELECT nome,extends FROM classes WHERE nome='$className'");
+        $row = $query->fetch_assoc();
+        $createClass = "class {$row['nome']}";
+        if($row['extends'] != NULL){
+            $createClass .=" extends {$row['extends']}";
         }
+        eval("$createClass{}");
     }
 
 }
