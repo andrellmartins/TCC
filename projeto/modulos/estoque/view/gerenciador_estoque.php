@@ -126,7 +126,7 @@ class gerenciador_estoque{
                         <label for="floatingComercial">Nome Comercial</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()">Nova Linha</button>
+                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()">Novo Lote</button>
                     </div>
                     <div class="form-floating mb-3">
                         <table class="table" id="tabelaItensLote">
@@ -134,6 +134,7 @@ class gerenciador_estoque{
                                 <tr>
                                     <th>Lote</th>
                                     <th>Validade</th>
+                                    <th>Quantidade</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,6 +159,9 @@ class gerenciador_estoque{
             </div>
         </form>
         <script>
+
+            
+
             $(()=>{
                 $("#floatingMedicamento").on('change',(evento)=>{
                     let valorMedicamento = evento.currentTarget.value,
@@ -171,7 +175,12 @@ class gerenciador_estoque{
                     mostrarCamposForm(enable)
                     esconderCamposForm(disable)
                 }).trigger('change')
+
+                
             })
+
+                            
+
             function novaLinhaLote(){
                 let idLinha = $("#tabelaItensLote > tbody > tr").length + 1;
                 $("#tabelaItensLote > tbody").append(`
@@ -188,10 +197,20 @@ class gerenciador_estoque{
                             <label for="floatingValidade${idLinha}">Data de Validade</label>
                         </div>
                     </td>
+                    <td>
+                        <div class="form-floating mb-3">
+                            <input type="number" min="1" class="form-control" name="qtd[${idLinha}]" id="floatingQtd${idLinha}" placeholder="Quantidade" required>
+                            <label for="floatingQtd${idLinha}">Quantidade</label>
+                        </div>
+                    </td>
                 </tr>
                 
                 `)
             }
+
+            
+
+            
         </script>
         <?php
         $content = ob_get_clean();

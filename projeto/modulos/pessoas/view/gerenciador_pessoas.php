@@ -238,11 +238,7 @@ class gerenciador_pessoas{
                             if(!validaCPF(cpfValue)){
                                 swal('Erro no Preenchimento do Formulário','CPF inválido!','warning')
                                 .then(()=>{
-                                    cpfField.val(
-                                        cpfField.masked(
-                                            cpfValue.substring(0,cpfValue.length-1)
-                                        )
-                                    ).trigger('focus');
+                                    cpfField.val('').trigger('focus');
                                 });
                             }
                         }
