@@ -1,15 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30-Maio-2022 às 22:28
--- Versão do servidor: 10.4.24-MariaDB
--- versão do PHP: 8.1.5
+-- Tempo de geração: 01-Jun-2022 às 01:36
+-- Versão do servidor: 10.4.17-MariaDB
+-- versão do PHP: 7.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Banco de dados: `clinica`
@@ -101,7 +107,8 @@ INSERT INTO `farmaceutico` (`id`, `id_funcionario`, `crf`, `id_uf_crf`) VALUES
 (20, 2, '56156', 41),
 (21, 3, '65156', 29),
 (25, 11, '15615', 29),
-(26, 12, '26516', 29);
+(26, 12, '26516', 29),
+(27, 15, '21321', 29);
 
 -- --------------------------------------------------------
 
@@ -127,7 +134,10 @@ INSERT INTO `funcionario` (`id`, `id_pessoa`, `id_cargo`, `salario`, `pis`) VALU
 (3, 51, 4, 0, ''),
 (11, 69, 4, 0, ''),
 (12, 70, 4, 0, ''),
-(14, 73, 2, 0, '');
+(14, 73, 2, 0, ''),
+(15, 76, 3, 0, '156.15615.61-5'),
+(16, 78, 2, 0, '156.15615.61-5'),
+(17, 79, 2, 0, '156.15615.61-5');
 
 -- --------------------------------------------------------
 
@@ -174,7 +184,9 @@ CREATE TABLE `medico` (
 --
 
 INSERT INTO `medico` (`id`, `id_funcionario`, `crm`, `id_uf_crm`) VALUES
-(5, 14, '56156', 29);
+(5, 14, '56156', 29),
+(6, 16, '56156', 29),
+(7, 17, '56156', 29);
 
 -- --------------------------------------------------------
 
@@ -187,6 +199,15 @@ CREATE TABLE `pacientes` (
   `id_pessoa` int(11) NOT NULL,
   `id_convenio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `pacientes`
+--
+
+INSERT INTO `pacientes` (`id`, `id_pessoa`, `id_convenio`) VALUES
+(2, 81, 1),
+(3, 82, 1),
+(4, 83, 1);
 
 -- --------------------------------------------------------
 
@@ -218,24 +239,30 @@ CREATE TABLE `pessoas` (
   `id` int(11) NOT NULL,
   `nome` varchar(200) NOT NULL,
   `ender` varchar(200) NOT NULL,
-  `telefone` varchar(20) DEFAULT NULL,
-  `cpf` varchar(14) DEFAULT NULL,
-  `id_tipo` int(11) NOT NULL,
-  `data_nasc` date DEFAULT current_timestamp(),
-  `sexo` varchar(10) NOT NULL
+  `telefone` varchar(20) NOT NULL,
+  `cpf` varchar(14) NOT NULL,
+  `data_nasc` date NOT NULL,
+  `sexo` varchar(10) NOT NULL,
+  `deletado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `pessoas`
 --
 
-INSERT INTO `pessoas` (`id`, `nome`, `ender`, `telefone`, `cpf`, `id_tipo`, `data_nasc`, `sexo`) VALUES
-(49, 'asmdlkamsdkl', 'aklsdmaklsdm', '+32 (12) 3 1231-3212', '132.165.123-15', 2, NULL, ''),
-(50, 'alskdmakl', 'kalsmdkla', '+61 (56) 1 5156-1561', '561.651.651-65', 2, NULL, ''),
-(51, 'klasmdkl', 'klamsdkl', '+54 (65) 4 5815-6156', '156.156.156-15', 2, NULL, ''),
-(69, 'aksdkla', 'lkasmd', '+65 (16) 5 1561-6515', '156.156.156-15', 2, NULL, ''),
-(70, 'asdmlkadmkl', 'lkamslkadmkl', '+87 (48) 9 1951-9616', '156.156.156-15', 2, NULL, ''),
-(73, 'aksdmakl', 'laksmkladm', '+89 (48) 9 4984-98', '489.489.489-48', 1, NULL, '');
+INSERT INTO `pessoas` (`id`, `nome`, `ender`, `telefone`, `cpf`, `data_nasc`, `sexo`, `deletado`) VALUES
+(49, 'asmdlkamsdkl', 'aklsdmaklsdm', '+32 (12) 3 1231-3212', '132.165.123-15', '0000-00-00', '', 1),
+(50, 'alskdmakl', 'kalsmdkla', '+61 (56) 1 5156-1561', '561.651.651-65', '0000-00-00', '', 1),
+(51, 'klasmdkl', 'klamsdkl', '+54 (65) 4 5815-6156', '156.156.156-15', '0000-00-00', '', 0),
+(69, 'aksdkla', 'lkasmd', '+65 (16) 5 1561-6515', '156.156.156-15', '0000-00-00', '', 0),
+(70, 'asdmlkadmkl', 'lkamslkadmkl', '+87 (48) 9 1951-9616', '156.156.156-15', '0000-00-00', '', 0),
+(73, 'aksdmakl', 'laksmkladm', '+89 (48) 9 4984-98', '489.489.489-48', '0000-00-00', '', 0),
+(76, 'teste', 'aslkdmakldsmklmlk', '+16 (51) 1 6510-3215', '132.041.023-15', '0000-00-00', '', 0),
+(78, 'teste', 'teste', '+32 (12) 3 1231-3212', '000.000.000-0', '0000-00-00', '', 0),
+(79, 'teste', 'teste', '+32 (12) 3 1231-3212', '000.000.000-0', '0000-00-00', '', 0),
+(81, 'carlos', 'rua do padeiro, 123', '+41 (99) 9 9999-9999', '009.086.669-00', '0000-00-00', '', 1),
+(82, 'aaa', 'aaa', '+32 (15) 6 3216-5132', '566.951.289-87', '0000-00-00', '', 1),
+(83, 'aklsmkadm', 'lkamsdklamdklm', '+62 (93) 1 9815-6189', '009.086.669-00', '0000-00-00', '', 0);
 
 -- --------------------------------------------------------
 
@@ -249,27 +276,6 @@ CREATE TABLE `produtos` (
   `descrição` varchar(250) NOT NULL,
   `data_cadastro` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `tipo_pessoa`
---
-
-CREATE TABLE `tipo_pessoa` (
-  `id` int(11) NOT NULL,
-  `tipo` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Extraindo dados da tabela `tipo_pessoa`
---
-
-INSERT INTO `tipo_pessoa` (`id`, `tipo`) VALUES
-(2, 'farmaceutico'),
-(4, 'funcionario'),
-(1, 'medico'),
-(3, 'paciente');
 
 -- --------------------------------------------------------
 
@@ -339,7 +345,13 @@ INSERT INTO `usuarios` (`id`, `id_pessoa`, `usuario`, `senha`) VALUES
 (22, 49, 'teste', 'asdwasd'),
 (44, 69, 'asdwasdw', 'asdwasdw'),
 (45, 70, 'aaa', 'aaa'),
-(48, 73, 'bbb', 'bbb');
+(48, 73, 'bbb', 'bbb'),
+(51, 76, 'carlos', 'carlos'),
+(53, 78, 'teste3', 'teste3'),
+(54, 79, 'asdw', 'asdw'),
+(56, 81, 'carlos1', 'carlos1'),
+(57, 82, 'asdwa', 'asdwa'),
+(58, 83, '231asd231asd', 'as32d1a23sd1');
 
 --
 -- Índices para tabelas despejadas
@@ -422,8 +434,7 @@ ALTER TABLE `pais`
 -- Índices para tabela `pessoas`
 --
 ALTER TABLE `pessoas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_tipo` (`id_tipo`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `produtos`
@@ -431,13 +442,6 @@ ALTER TABLE `pessoas`
 ALTER TABLE `produtos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `func_cadastro` (`id_func_cadastro`);
-
---
--- Índices para tabela `tipo_pessoa`
---
-ALTER TABLE `tipo_pessoa`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tipo` (`tipo`);
 
 --
 -- Índices para tabela `uf`
@@ -481,13 +485,13 @@ ALTER TABLE `convenios`
 -- AUTO_INCREMENT de tabela `farmaceutico`
 --
 ALTER TABLE `farmaceutico`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de tabela `funcionario`
 --
 ALTER TABLE `funcionario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `lote`
@@ -505,13 +509,13 @@ ALTER TABLE `medicamentos`
 -- AUTO_INCREMENT de tabela `medico`
 --
 ALTER TABLE `medico`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `pais`
@@ -523,19 +527,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de tabela `pessoas`
 --
 ALTER TABLE `pessoas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `tipo_pessoa`
---
-ALTER TABLE `tipo_pessoa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `uf`
@@ -547,7 +545,7 @@ ALTER TABLE `uf`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- Restrições para despejos de tabelas
@@ -600,17 +598,10 @@ ALTER TABLE `pacientes`
   ADD CONSTRAINT `pacientes_ibfk_2` FOREIGN KEY (`id_convenio`) REFERENCES `convenios` (`id`);
 
 --
--- Limitadores para a tabela `pessoas`
---
-ALTER TABLE `pessoas`
-  ADD CONSTRAINT `pessoas_ibfk_1` FOREIGN KEY (`id_tipo`) REFERENCES `tipo_pessoa` (`id`);
-
---
 -- Limitadores para a tabela `produtos`
 --
 ALTER TABLE `produtos`
-  ADD CONSTRAINT `func_cadastro` FOREIGN KEY (`id_func_cadastro`) REFERENCES `funcionario` (`id`),
-  ADD CONSTRAINT `pessoa_cadastro` FOREIGN KEY (`id_func_cadastro`) REFERENCES `pessoas` (`id`);
+  ADD CONSTRAINT `id_func_produto_funcionario` FOREIGN KEY (`id_func_cadastro`) REFERENCES `funcionario` (`id`);
 
 --
 -- Limitadores para a tabela `uf`
@@ -624,3 +615,7 @@ ALTER TABLE `uf`
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`id_pessoa`) REFERENCES `pessoas` (`id`);
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

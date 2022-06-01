@@ -327,22 +327,20 @@ class gerenciador_pessoas{
                     );
 
                     $dadosPessoa = $query->fetch_assoc();
-                    $dadosPessoa['data_nasc'] = DateTime::createFromFormat('Y-m-d',$dadosPessoa['data_nasc'])->format('d/m/Y');
-                    //var_dump($dadosPessoa);exit;
                     echo "
-                        $(\"#floatingNome\"     ).val('{$dadosPessoa['nome']}');
-                        $(\"#floatingEndereço\" ).val('{$dadosPessoa['ender']}');
-                        $(\"#floatingTelefone\" ).val('{$dadosPessoa['telefone']}');
-                        $(\"#floatingCpf\"      ).val('{$dadosPessoa['cpf']}');
-                        $(\"#floatingTipo\"     ).val('{$dadosPessoa['tipo']}').trigger('change');
-                        $(\"#floatingPis\"      ).val('{$dadosPessoa['pis']}');
-                        $(\"#floatingCargo\"    ).val('{$dadosPessoa['id_cargo']}').trigger('change');
-                        $(\"#floatingCrm\"      ).val('{$dadosPessoa['crm']}');
-                        $(\"#floatingCrf\"      ).val('{$dadosPessoa['crf']}');
-                        $(\"#floatingUf\"       ).val('{$dadosPessoa['uf']}');
-                        $(\"#floatingConvenio\" ).val('{$dadosPessoa['convenio']}');
-                        $(\"#floatingUsuario\"  ).val('{$dadosPessoa['usuario']}');
-                        $(\"#floatingSexo\"  ).val('{$dadosPessoa['sexo']}');
+                        $(\"#floatingNome\"        ).val('{$dadosPessoa['nome']}');
+                        $(\"#floatingEndereço\"    ).val('{$dadosPessoa['ender']}');
+                        $(\"#floatingTelefone\"    ).val('{$dadosPessoa['telefone']}');
+                        $(\"#floatingCpf\"         ).val('{$dadosPessoa['cpf']}');
+                        $(\"#floatingTipo\"        ).val('{$dadosPessoa['tipo']}').trigger('change');
+                        $(\"#floatingPis\"         ).val('{$dadosPessoa['pis']}');
+                        $(\"#floatingCargo\"       ).val('{$dadosPessoa['id_cargo']}').trigger('change');
+                        $(\"#floatingCrm\"         ).val('{$dadosPessoa['crm']}');
+                        $(\"#floatingCrf\"         ).val('{$dadosPessoa['crf']}');
+                        $(\"#floatingUf\"          ).val('{$dadosPessoa['uf']}');
+                        $(\"#floatingConvenio\"    ).val('{$dadosPessoa['convenio']}');
+                        $(\"#floatingUsuario\"     ).val('{$dadosPessoa['usuario']}');
+                        $(\"#floatingSexo\"        ).val('{$dadosPessoa['sexo']}');
                         $(\"#floatingNascimento\"  ).val('{$dadosPessoa['data_nasc']}');
                         ";
                 }
@@ -350,7 +348,7 @@ class gerenciador_pessoas{
                 if($tipo == 'visualizar'){
                     echo 
                     "
-                    $(\"#floatingNome, #floatingEndereço, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha\").prop('disabled',true)
+                    $(\"#floatingNome, #floatingEndereço, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha, #floatingSexo, #floatingNascimento\").prop('disabled',true)
                     ";
                 }
 

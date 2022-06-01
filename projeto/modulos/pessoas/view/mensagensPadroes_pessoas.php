@@ -23,8 +23,8 @@ class mensagensPadroes_pessoas
         ob_start();
     ?>
         <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Usuário Inserido com sucesso!</h4>
-            <p>Seu usuário foi criado com sucesso</p>
+            <h4 class="alert-heading">Usuário Alterado com sucesso!</h4>
+            <p>Seu usuário foi alterado com sucesso</p>
             <hr>
             <p class="mb-0"><a href="?modulo=pessoas&programa=pessoas&acao=inicio">clique aqui</a> para voltar para a consulta.</p>
         </div>
@@ -115,14 +115,14 @@ class mensagensPadroes_pessoas
         ob_start();
     ?>
         <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Erro na Inserção!</h4>
-            <p>Erro na tentativa de Inserção de um cadastro novo.</p>
+            <h4 class="alert-heading">Erro na Alteração!</h4>
+            <p>Erro na tentativa de Alteração de um cadastro.</p>
             <hr>
             <p><i><?php echo $msg ?></i></p>
             <?php
             if ($back) {
             ?>
-                <p class="mb-0">Para voltar para tela de Cadastro anterior, <a href="#" onclick="history.back()">clique aqui</a> </p>
+                <p class="mb-0">Para voltar para o formulário anterior, <a href="#" onclick="history.back()">clique aqui</a> </p>
             <?php
             }
             ?>

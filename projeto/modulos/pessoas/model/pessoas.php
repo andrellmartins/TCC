@@ -52,11 +52,12 @@ class pessoas extends model{
         //recuperar pessoa
         $query = $this->execQuery(
            "SELECT 
-                u.id as user_id,
-                pa.id as paciente_id,
-                f.id as func_id,
-                m.id as med_id,
-                fa.id as farm_id
+                u.id as id_usuario,
+                pa.id as id_paciente,
+                f.id as id_funcionario,
+                f.id_cargo as cargo,
+                m.id as id_medico,
+                fa.id as id_farmaceutico
             FROM pessoas p
                 LEFT JOIN usuarios u
                     ON u.id_pessoa=p.id
@@ -72,6 +73,7 @@ class pessoas extends model{
                 AND p.deletado=FALSE
             "
         );
+        
 
         $pessoaAtual = $query->fetch_assoc();
         if(is_null($pessoaAtual)){
@@ -85,31 +87,51 @@ class pessoas extends model{
                 telefone='{$dados['telefone']}',
                 cpf='{$dados['cpf']}',
                 sexo='{$dados['sexo']}',
-                data_nasc='{$dados['nascimento']}')
+                data_nasc='{$dados['nascimento']}'
             WHERE id={$dados['id']}"
         );
-        $this->execQuery(
-            "INSERT INTO usuarios(id_pessoa,usuario,senha) VALUES 
-            ({$dados['id']},'{$dados['usuario']}','{$dados['senha']}')"
-        );
-        $this->execQuery(
-                "INSERT INTO pacientes(id_pessoa,id_convenio) VALUES
-                ({$dados['id']},'{$dados['convenio']}')"
+        if(!is_null($pessoaAtual['id_usuario'])){
+            $this->execQuery(
+                "UPDATE usuarios
+                SET usuario = '{$dados['usuario']}',
+                    senha   = '{$dados['senha']}' 
+                WHERE id={$pessoaAtual['id_usuario']}
+                "
             );
-        $this->execQuery(
-                "INSERT INTO funcionario(id_pessoa,id_cargo,pis) VALUES
-                ({$dados['id']},'{$dados['cargo']}','{$dados['pis']}')"
+        }
+        if(!is_null($pessoaAtual['id_paciente'])){
+            $this->execQuery(
+                "UPDATE pacientes 
+                 SET id_convenio='{$dados['convenio']}'
+                 WHERE id={$pessoaAtual['id_paciente']}"
             );
-        $this->execQuery(
-                    "INSERT INTO medico(id_funcionario,crm,id_uf_crm) VALUES
-                    ('{$idFuncionario}','{$dados['crm']}','{$dados['uf']}')"
-                );
-        $this->execQuery(
-                    "INSERT INTO farmaceutico(id_funcionario,crf,id_uf_crf) VALUES
-                    ('{$idFuncionario}','{$dados['crf']}','{$dados['uf']}')"
-                );
+        }
+        if(!is_null($pessoaAtual['id_funcionario'])){
+            $this->execQuery(
+                "UPDATE funcionario
+                SET id_cargo='{$pessoaAtual['cargo']}',
+                    pis='{$dados['pis']}'
+                WHERE id={$pessoaAtual['id_funcionario']}"
+            );
+        }
+        if(!is_null($pessoaAtual['id_medico'])){
+            $this->execQuery(
+                "UPDATE medico 
+                SET crm='{$dados['crm']}',
+                    id_uf_crm={$dados['uf']}
+                WHERE id={$pessoaAtual['id_medico']}"
+            );
+        }        
+        if(!is_null($pessoaAtual['id_farmaceutico'])){
+            $this->execQuery(
+                "UPDATE farmaceutico
+                SET crf='{$dados['crf']}',
+                    id_uf_crf={$dados['uf']}
+                WHERE id={$pessoaAtual['id_farmaceutico']}"
+            );
+        }
 
-        //$this->commit();
+        $this->commit();
         return true;
     }
 

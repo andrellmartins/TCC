@@ -29,7 +29,7 @@
             Módulo de Estoque
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbar_dropdown_estoque">
-            <li><a class="dropdown-item" href="#">Gerenciador de Produtos</a></li>
+            <li><a class="dropdown-item" href="?modulo=estoque&programa=estoque&acao=inicio">Gerenciador de Produtos</a></li>
           </ul>
         </li>
         <li class="nav-item">
