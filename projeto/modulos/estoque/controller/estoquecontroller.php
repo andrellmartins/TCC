@@ -8,8 +8,13 @@ class estoquecontroller extends crudcontroller{
         $interface->render();
     }
 
-/*------ AREA DOS FORMS DE PRODUTOS */
+/*------ AREA DOS FORMS DE ESTOQUE */
     public function formInclui(){
+        $funcionario = instanceClassFromModulo('pessoas','funcionario') -> getFuncionarioByIdPessoa($_SESSION['usuarioLogado']['id_pessoa']);
+
+        if(!$funcionario){
+            mensagensPadroes_estoque::apenasFuncionariosInseremEstoque();
+        }
         $content = gerenciador_estoque::returnCadastroProduto('inclui','?modulo=estoque&programa=estoque&acao=inclui');
         $interface = new interfacePadrao;
         $interface->setTitulo('Incluir');
@@ -17,10 +22,16 @@ class estoquecontroller extends crudcontroller{
         $interface->render();
     }
 
-/*------FIM DA AREA DOS FORMS DE PRODUTOS */
+/*------FIM DA AREA DOS FORMS DE ESTOQUE */
 
 /*------ AREA TRATAMENTO DOS DADOS */
     public function inclui(){
+        $funcionario = instanceClassFromModulo('pessoas','funcionario') -> getFuncionarioByIdPessoa($_SESSION['usuarioLogado']['id_pessoa']);
+
+        if(!$funcionario){
+            mensagensPadroes_estoque::apenasFuncionariosInseremEstoque();
+        }
+        $this->post['id_funcionario'] = $funcionario['id'];
         try{
             $this->model->inclui($this->post);
             mensagensPadroes_estoque::insercaoBemSucedida();

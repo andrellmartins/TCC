@@ -39,12 +39,15 @@ class model{
 
     public function loadClassFromDatabase($className){
         $query = $this->execQuery("SELECT nome,extends FROM classes WHERE nome='$className'");
+        if($query->num_rows != 1){
+            return false;
+        }
         $row = $query->fetch_assoc();
         $createClass = "class {$row['nome']}";
         if($row['extends'] != NULL){
             $createClass .=" extends {$row['extends']}";
         }
-        eval("$createClass{}");
+        eval("$createClass {}");
     }
 
 }

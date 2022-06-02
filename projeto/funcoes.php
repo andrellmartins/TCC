@@ -25,7 +25,7 @@ function iniSystem(){
 
 function loadClassFromFile($className){
     $className = strtolower($className);
-    $modulo = filter_input(INPUT_GET,'modulo') ?? 'pessoas';
+    $modulo = $_SESSION['loadModulo'] ?? filter_input(INPUT_GET,'modulo') ?? 'pessoas';
     $inicio = $modulo == 'base' ? '' : 'modulos'.DIRECTORY_SEPARATOR;
     
     $iniPath = syspath($inicio . $modulo . DIRECTORY_SEPARATOR);
@@ -105,6 +105,13 @@ function tratarRequisicaoNormal(){
         die('ação não existe');
     }
     $classe->$acao();
+}
+
+function instanceClassFromModulo($modulo,$classe){
+    $_SESSION['loadModulo'] = $modulo;
+    $classe = new $classe;
+    unset($_SESSION['loadModulo']);
+    return $classe;
 }
 
 function syspath($finalpath){

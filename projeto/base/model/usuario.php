@@ -3,7 +3,11 @@ class usuario extends model{
     public function login($usuario,$senha)
     {
         $query = $this->execQuery(
-            "SELECT * 
+            "SELECT 
+                p.id as id_pessoa,
+                p.nome,p.ender,p.telefone,p.cpf,p.data_nasc,p.sexo,
+                u.id as id_usuario,
+                u.usuario,u.senha 
             FROM pessoas p 
                 INNER JOIN usuarios u 
                     ON p.id=u.id_pessoa 

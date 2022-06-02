@@ -1,7 +1,7 @@
 <?php
 class gerenciador_estoque{
     public static function returnGrid($mostraBotaoInclui = true) {
-        //carrega as pessoas
+        //carrega as produtos
         $model = new model;
         $query = $model->execQuery(
            'SELECT  p.id,p.descricao,p.data_cadastro,
@@ -89,12 +89,7 @@ class gerenciador_estoque{
         <?php
         return ob_get_clean();
     }
-    public static function returnCadastroProduto($tipo = 'login', $acaoForm = '', $idPessoa=false){
-        $model = new model;
-
-        if($tipo == 'login'){
-            $acaoForm = '?modulo=pessoas&programa=pessoas&acao=cadastro';
-        }
+    public static function returnCadastroProduto($tipo = '', $acaoForm = '', $idEstoque=false){
 
         ob_start();
         ?>
@@ -126,20 +121,21 @@ class gerenciador_estoque{
                         <label for="floatingComercial">Nome Comercial</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()">Novo Lote</button>
-                    </div>
-                    <div class="form-floating mb-3">
                         <table class="table" id="tabelaItensLote">
                             <thead>
                                 <tr>
                                     <th>Lote</th>
                                     <th>Validade</th>
                                     <th>Quantidade</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()">Novo Lote</button>
                     </div>
                     <div class="form-floating mb-3">
                             <?php
@@ -184,7 +180,7 @@ class gerenciador_estoque{
             function novaLinhaLote(){
                 let idLinha = $("#tabelaItensLote > tbody > tr").length + 1;
                 $("#tabelaItensLote > tbody").append(`
-                <tr>
+                <tr class="linhaLote">
                     <td>
                         <div class="form-floating mb-3">
                             <input type="Input" class="form-control" name="lote[${idLinha}]" id="floatingLote${idLinha}" placeholder="Lote" required>
@@ -202,6 +198,9 @@ class gerenciador_estoque{
                             <input type="number" min="1" class="form-control" name="qtd[${idLinha}]" id="floatingQtd${idLinha}" placeholder="Quantidade" required>
                             <label for="floatingQtd${idLinha}">Quantidade</label>
                         </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" onclick="$(this).closest('.linhaLote').remove()">X</button>
                     </td>
                 </tr>
                 
