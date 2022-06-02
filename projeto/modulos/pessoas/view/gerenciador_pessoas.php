@@ -287,7 +287,7 @@ class gerenciador_pessoas{
                             disable    = $("#floatingCrm,#floatingConvenio");
                             break;
                         //outro funcionário
-                        case '4':
+                        default:
                             enable      = $("")
                             disable     = $('#floatingCrf, #floatingUf, #floatingCrm,#floatingConvenio');
                         break;
