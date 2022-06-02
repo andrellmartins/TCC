@@ -2,22 +2,6 @@
 class mensagensPadroes_pessoas
 {
 //Mensagens Informação
-    public static function msgBemVindo()
-    {
-        ob_start();
-    ?>
-        
-            <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">Bem Vindo ao Sistema</h4>
-            <p>Você fez login e entrou no sistema. Seja Bem Vindo.</p>
-            <hr>
-            <p class="mb-0">Para fazer logoff, <a href="?modulo=pessoas&programa=pessoas&acao=logoff">clique aqui</a> </p>
-        </div>
-    <?php
-        $content = ob_get_clean();
-        return $content;
-        
-    }
     public static function alterarBemSucedido()
     {
         ob_start();

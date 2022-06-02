@@ -12,9 +12,11 @@ class gerenciador_pessoas{
         ob_start();
         if($mostraBotaoInclui){
             ?>
-        <div class="row text-center">
-            <div class="col w-auto">
-                <button class="btn btn-success" type="button" onclick="window.location='?modulo=pessoas&programa=pessoas&acao=formInclui'">Incluir</button>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col w-auto">
+                    <button class="btn btn-success" type="button" onclick="window.location='?modulo=pessoas&programa=pessoas&acao=formInclui'">Incluir</button>
+                </div>
             </div>
         </div>
             <?php

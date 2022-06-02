@@ -5,20 +5,25 @@ class gerenciador_estoque{
         $model = new model;
         $query = $model->execQuery(
            'SELECT  p.id,p.descricao,p.data_cadastro,
+                    IF(m.id IS NULL,\'Não\',\'Sim\') isMedicamento,
                     pe.nome
             FROM produtos p
+                LEFT JOIN medicamentos m
+                    ON m.id_produto=p.id
                 LEFT JOIN funcionario f
                     ON f.id=p.id_func_cadastro
                 LEFT JOIN pessoas pe
-                    ON p.id=f.id_pessoa
+                    ON pe.id=f.id_pessoa
             '
         );
         ob_start();
         if($mostraBotaoInclui){
             ?>
-        <div class="row text-center">
-            <div class="col w-auto">
-                <button class="btn btn-success" type="button" onclick="window.location='?modulo=estoque&programa=estoque&acao=formInclui'">Incluir</button>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col w-auto">
+                    <button class="btn btn-success" type="button" onclick="window.location='?modulo=estoque&programa=estoque&acao=formInclui'">Incluir</button>
+                </div>
             </div>
         </div>
             <?php
@@ -30,6 +35,7 @@ class gerenciador_estoque{
                     <th>id </th>
                     <th>Descrição</th>
                     <th>Data Cadastro</th>
+                    <th>É Medicamento ?</th>
                     <th>Nome Funcionario</th>
                     <th>Ações do Sistema</th>
                 </tr>
@@ -39,10 +45,11 @@ class gerenciador_estoque{
                 while($row = $query->fetch_assoc()){
                     ?>
                 <tr>
-                    <td><?php echo $row['id']              ?></td>
-                    <td><?php echo $row['descricao']            ?></td>
-                    <td><?php echo $row['data_cadastro']           ?></td>
-                    <td><?php echo $row['nome']        ?></td>
+                    <td><?php echo $row['id']            ?></td>
+                    <td><?php echo $row['descricao']     ?></td>
+                    <td><?php echo $row['data_cadastro'] ?></td>
+                    <td><?php echo $row['isMedicamento'] ?></td>
+                    <td><?php echo $row['nome']          ?></td>
                     <td>
                         <button class="btn ml-1 mr-1 mb-1 btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar     </button>
                         <button class="btn ml-1 mr-1 mb-1 btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar </button>

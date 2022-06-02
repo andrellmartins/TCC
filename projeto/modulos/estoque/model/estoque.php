@@ -19,7 +19,7 @@ class estoque extends model{
             );
         }
 
-        //$this->commit();
+        $this->commit();
         return true;
     }
 }
