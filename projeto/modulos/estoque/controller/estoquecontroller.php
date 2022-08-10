@@ -40,6 +40,14 @@ class estoquecontroller extends crudcontroller{
         }   
     }
 
+    public function excluirPessoa(){
+        try{
+            $this->model->excluir($this->get['id']);
+            mensagensPadroes_estoque::delecaoBemSucedida();
+        }catch(Throwable $t){
+            mensagensPadroes_estoque::erroNaDelecao($t->getMessage());
+        }
+    }
 
 
 }

@@ -4,7 +4,7 @@ class gerenciador_estoque{
         //carrega as produtos
         $model = new model;
         $query = $model->execQuery(
-           'SELECT  p.id,p.descricao,p.data_cadastro,
+           'SELECT  p.id,p.fabricante,p.descricao,p.data_cadastro,
                     IF(m.id IS NULL,\'Não\',\'Sim\') isMedicamento,
                     pe.nome
             FROM produtos p
@@ -33,6 +33,7 @@ class gerenciador_estoque{
             <thead class="position-sticky top-0 bg-light">
                 <tr>
                     <th>id </th>
+                    <th>Fabricante</th>
                     <th>Descrição</th>
                     <th>Data Cadastro</th>
                     <th>É Medicamento ?</th>
@@ -46,6 +47,7 @@ class gerenciador_estoque{
                     ?>
                 <tr>
                     <td><?php echo $row['id']            ?></td>
+                    <td><?php echo $row['fabricante']    ?></td>
                     <td><?php echo $row['descricao']     ?></td>
                     <td><?php echo $row['data_cadastro'] ?></td>
                     <td><?php echo $row['isMedicamento'] ?></td>
@@ -103,6 +105,10 @@ class gerenciador_estoque{
         <form action="<?php echo $acaoForm ?>" method="post">
             <div class="container w-50 self-align-middle">
                 <div class="row text-center">
+                    <div class="form-floating mb-3">
+                        <input type="Input" class="form-control" name="fabricante" id="floatingFabricante" placeholder="Fabricante" required>
+                        <label for="floatingFabricante">Fabricante</label>
+                    </div>
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="descricao" id="floatingDescricao" placeholder="Descricao" required>
                         <label for="floatingDescricao">Descrição</label>

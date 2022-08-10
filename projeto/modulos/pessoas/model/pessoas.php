@@ -4,8 +4,8 @@ class pessoas extends model{
     public function inclui($dados){
         $this->begin_transaction();
         $this->execQuery(
-            "INSERT INTO pessoas(nome,ender,telefone,cpf,sexo,data_nasc) VALUES 
-            ('{$dados['nome']}','{$dados['endereco']}','{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
+            "INSERT INTO pessoas(nome,ender, time_futebol,telefone,cpf,sexo,data_nasc) VALUES 
+            ('{$dados['nome']}','{$dados['endereco']}','{$dados['time_futebol']}' ,'{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
         );
         
         $idPessoa = $this->insert_id;
@@ -87,7 +87,8 @@ class pessoas extends model{
                 telefone='{$dados['telefone']}',
                 cpf='{$dados['cpf']}',
                 sexo='{$dados['sexo']}',
-                data_nasc='{$dados['nascimento']}'
+                data_nasc='{$dados['nascimento']}',
+                time_futebol='{$dados['time_futebol']}'
             WHERE id={$dados['id']}"
         );
         if(!is_null($pessoaAtual['id_usuario'])){
@@ -139,6 +140,10 @@ class pessoas extends model{
     public function excluir($id){
         $this->begin_transaction();
         
+        if($id == $_SESSION['usuarioLogado']['id_pessoa']){
+            throw new Error('Pessoa não pode se excluir');
+        }
+
         $queryPessoa = $this->execQuery("SELECT * FROM pessoas p WHERE p.id=$id AND p.deletado=FALSE");
         if($queryPessoa->num_rows == 0){
             throw new Exception('Pessoa não existe');
@@ -152,7 +157,7 @@ class pessoas extends model{
             throw new Exception('Erro ao deletar pessoa');
         }
 
-        $this->commit();
+        //$this->commit();
         return true;
     }
 

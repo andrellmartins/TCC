@@ -19,7 +19,19 @@ class mensagensPadroes_estoque
         interfacePadrao::render_args($content);
     }
     
-    
+    public static function delecaoBemSucedida()
+    {
+        ob_start();
+    ?>
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Produto Deletada com sucesso!</h4>
+            <p>Produto foi deletado com sucesso, clique <a href="?modulo=estoque&programa=estoque&acao=inicio">aqui</a> para voltar para o grid</p>
+            <hr>
+        </div>
+    <?php
+        $content = ob_get_clean();
+        interfacePadrao::render_args($content);
+    }
 
 //Mensagens Erros
     public static function apenasFuncionariosInseremEstoque(){
@@ -57,7 +69,20 @@ class mensagensPadroes_estoque
         $content = ob_get_clean();
         interfacePadrao::render_args($content);
     }
-  
-
+    
+    public static function erroNaDelecao($msg)
+    {
+        ob_start();
+    ?>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro na Deleção!</h4>
+            <p>Erro na tentativa de Deleção do cadastro.</p>
+            <hr>
+            <p><i><?php echo $msg ?></i></p>
+        </div>
+    <?php
+        $content = ob_get_clean();
+        interfacePadrao::render_args($content);
+    }
     
 }

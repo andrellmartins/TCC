@@ -4,7 +4,7 @@ class gerenciador_pessoas{
         //carrega as pessoas
         $model = new model;
         $query = $model->execQuery(
-           'SELECT  p.id, p.nome,  p.ender, p.telefone, p.cpf
+           'SELECT  p.id, p.nome,  p.ender, p.time_futebol, p.telefone, p.cpf
             FROM pessoas p 
             WHERE p.deletado=FALSE
             '
@@ -30,6 +30,7 @@ class gerenciador_pessoas{
                     <th>Endereço </th>
                     <th>Telefone </th>
                     <th>CPF</th>
+                    <th>Time de Futebol</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -43,6 +44,7 @@ class gerenciador_pessoas{
                     <td><?php echo $row['ender']           ?></td>
                     <td><?php echo $row['telefone']        ?></td>
                     <td><?php echo $row['cpf']             ?></td>
+                    <td><?php echo $row['time_futebol']    ?></td>
                     <td>
                         <button class="btn ml-1 mr-1 mb-1 btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar     </button>
                         <button class="btn ml-1 mr-1 mb-1 btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar </button>
@@ -135,6 +137,10 @@ class gerenciador_pessoas{
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="endereco" id="floatingEndereço" placeholder="Endereço" required>
                         <label for="floatingEndereço">Endereço</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="Input" class="form-control" name="time_futebol" id="floatingTime" placeholder="Time de Futebol" required>
+                        <label for="floatingEndereço">Time de Futebol</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="telefone" id="floatingTelefone" placeholder="Telefone" required>
@@ -251,8 +257,7 @@ class gerenciador_pessoas{
                     $('#floatingCrm, #floatingCrf').mask('00000');//5
                 //esconde CRF CRM e UF
                     let disabled = $("#floatingCrf,#floatingUf,#floatingCrm,#floatingCargo,#floatingConvenio");
-                    disabled.prop('disabled',true);
-                    disabled.parent().css('display','none');
+                    esconderCamposForm(disabled)
                 //onchange floatingTipo
                 $('#floatingTipo').on('change',(evento)=>{
                     let tipo = $(evento.currentTarget),
@@ -267,7 +272,6 @@ class gerenciador_pessoas{
                         enable  = $('#floatingPis,#floatingCargo');
                         disable = $('#floatingConvenio');
                     }
-
                     mostrarCamposForm(enable);
                     esconderCamposForm(disable);
                    
@@ -279,17 +283,17 @@ class gerenciador_pessoas{
                         //médico
                         case '2':
                             enable      = $("#floatingCrm,#floatingUf");
-                            disable    = $("#floatingCrf,#floatingConvenio");
+                            disable    = $("#floatingCrf");
                             break;
                         //farmacêutico
                         case '3':
                             enable      = $("#floatingCrf,#floatingUf");
-                            disable    = $("#floatingCrm,#floatingConvenio");
+                            disable    = $("#floatingCrm");
                             break;
                         //outro funcionário
                         default:
                             enable      = $("")
-                            disable     = $('#floatingCrf, #floatingUf, #floatingCrm,#floatingConvenio');
+                            disable     = $('#floatingCrf, #floatingUf, #floatingCrm');
                         break;
                     }
                     mostrarCamposForm(enable);
@@ -300,7 +304,7 @@ class gerenciador_pessoas{
                 if($idPessoa){
                     $query = $model->execQuery(
                         "SELECT
-                            p.nome, p.ender, p.telefone, p.cpf,p.data_nasc,p.sexo,
+                            p.nome, p.ender, p.time_futebol, p.telefone, p.cpf,p.data_nasc,p.sexo,
                             IF(ISNULL(f.id),0,1) tipo,
                             f.pis,
                             f.id_cargo,
@@ -328,6 +332,7 @@ class gerenciador_pessoas{
                     echo "
                         $(\"#floatingNome\"        ).val('{$dadosPessoa['nome']}');
                         $(\"#floatingEndereço\"    ).val('{$dadosPessoa['ender']}');
+                        $(\"#floatingTime\"        ).val('{$dadosPessoa['time_futebol']}');
                         $(\"#floatingTelefone\"    ).val('{$dadosPessoa['telefone']}');
                         $(\"#floatingCpf\"         ).val('{$dadosPessoa['cpf']}');
                         $(\"#floatingTipo\"        ).val('{$dadosPessoa['tipo']}').trigger('change');
@@ -346,7 +351,7 @@ class gerenciador_pessoas{
                 if($tipo == 'visualizar'){
                     echo 
                     "
-                    $(\"#floatingNome, #floatingEndereço, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha, #floatingSexo, #floatingNascimento\").prop('disabled',true)
+                    $(\"#floatingNome, #floatingEndereço, #floatingTime, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha, #floatingSexo, #floatingNascimento\").prop('disabled',true)
                     ";
                 }
 

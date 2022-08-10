@@ -5,8 +5,8 @@ class estoque extends model{
         
 
         $this->execQuery(
-            "INSERT INTO produtos(descricao, id_func_cadastro) VALUES 
-            ('{$dados['descricao']}', {$dados['id_funcionario']})
+            "INSERT INTO produtos(fabricante, descricao, id_func_cadastro) VALUES 
+            ('{$dados['fabricante']}','{$dados['descricao']}', {$dados['id_funcionario']})
             "
         );
         $insertProduto = $this->insert_id;
@@ -21,5 +21,8 @@ class estoque extends model{
 
         $this->commit();
         return true;
+    }
+    public function excluirProduto($id){
+        
     }
 }
