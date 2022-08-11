@@ -86,7 +86,7 @@ class pessoascontroller extends crudcontroller{
 /*------INICIO TRATAMENTO ENTRADA DADOS------*/
     public function inclui(){
         try{
-            $this->model->inclui($this->post);
+            $this->model->incluir($this->post);
             mensagensPadroes_pessoas::insercaoBemSucedida();
         }catch(Throwable $t){
             mensagensPadroes_pessoas::erroNaInsercao($t->getMessage());
@@ -103,7 +103,7 @@ class pessoascontroller extends crudcontroller{
     }
     public function cadastro(){
         try{
-            $this->model->inclui($this->post);
+            $this->model->incluir($this->post);
             mensagensPadroes_pessoas::cadastroBemSucedido();
         }catch(Throwable $t){
             mensagensPadroes_pessoas::erroNaInsercao($t->getMessage());

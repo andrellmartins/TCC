@@ -1,11 +1,11 @@
 <?php
 class pessoas extends model{
     
-    public function inclui($dados){
+    public function incluir($dados){
         $this->begin_transaction();
         $this->execQuery(
-            "INSERT INTO pessoas(nome,ender, time_futebol,telefone,cpf,sexo,data_nasc) VALUES 
-            ('{$dados['nome']}','{$dados['endereco']}','{$dados['time_futebol']}' ,'{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
+            "INSERT INTO pessoas(nome,ender, telefone,cpf,sexo,data_nasc) VALUES 
+            ('{$dados['nome']}','{$dados['endereco']}','{'{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
         );
         
         $idPessoa = $this->insert_id;

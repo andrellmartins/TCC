@@ -4,7 +4,7 @@ class gerenciador_estoque{
         //carrega as produtos
         $model = new model;
         $query = $model->execQuery(
-           'SELECT  p.id,p.fabricante,p.descricao,p.data_cadastro,
+           'SELECT  p.id,p.descricao,p.fabricante,p.data_cadastro,
                     IF(m.id IS NULL,\'Não\',\'Sim\') isMedicamento,
                     pe.nome
             FROM produtos p
@@ -14,6 +14,7 @@ class gerenciador_estoque{
                     ON f.id=p.id_func_cadastro
                 LEFT JOIN pessoas pe
                     ON pe.id=f.id_pessoa
+            WHERE p.deletado=FALSE
             '
         );
         ob_start();
@@ -33,8 +34,8 @@ class gerenciador_estoque{
             <thead class="position-sticky top-0 bg-light">
                 <tr>
                     <th>id </th>
-                    <th>Fabricante</th>
                     <th>Descrição</th>
+                    <th>Fabricante</th>
                     <th>Data Cadastro</th>
                     <th>É Medicamento ?</th>
                     <th>Nome Funcionario</th>
@@ -47,8 +48,8 @@ class gerenciador_estoque{
                     ?>
                 <tr>
                     <td><?php echo $row['id']            ?></td>
-                    <td><?php echo $row['fabricante']    ?></td>
                     <td><?php echo $row['descricao']     ?></td>
+                    <td><?php echo $row['fabricante']    ?></td>
                     <td><?php echo $row['data_cadastro'] ?></td>
                     <td><?php echo $row['isMedicamento'] ?></td>
                     <td><?php echo $row['nome']          ?></td>
@@ -65,10 +66,10 @@ class gerenciador_estoque{
         </table>
         <script>
             function editarLinha(idLinha){
-                window.location.href = `?p=modulo=estoque&programa=estoque&acao=formAlterarProduto&id=${idLinha}`;
+                window.location.href = `?modulo=estoque&programa=estoque&acao=formAlterarProduto&id=${idLinha}`;
             }
             function verLinha(idLinha){
-                window.location.href = `?p=modulo=estoque&programa=estoque&acao=formVisualizaProduto&id=${idLinha}`;
+                window.location.href = `?modulo=estoque&programa=estoque&acao=formVisualizaProduto&id=${idLinha}`;
             }
             function excluirLinha(idLinha){
                 swal({
@@ -91,27 +92,27 @@ class gerenciador_estoque{
                 .then(opcao => {
                     if(!opcao) return;
 
-                    window.location.href = `?p=modulo=estoque&programa=estoque&acao=excluirProduto&id=${idLinha}`;
+                    window.location.href = `?modulo=estoque&programa=estoque&acao=excluirProduto&id=${idLinha}`;
                 })
             }
         </script>
         <?php
         return ob_get_clean();
     }
-    public static function returnCadastroProduto($tipo = '', $acaoForm = '', $idEstoque=false){
-
+    public static function returnCadastroProduto($return=false, $tipo = '', $acaoForm = '', $idProduto=false){
+        $model = new model;
         ob_start();
         ?>
         <form action="<?php echo $acaoForm ?>" method="post">
             <div class="container w-50 self-align-middle">
                 <div class="row text-center">
                     <div class="form-floating mb-3">
-                        <input type="Input" class="form-control" name="fabricante" id="floatingFabricante" placeholder="Fabricante" required>
-                        <label for="floatingFabricante">Fabricante</label>
-                    </div>
-                    <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="descricao" id="floatingDescricao" placeholder="Descricao" required>
                         <label for="floatingDescricao">Descrição</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="Input" class="form-control" name="fabricante" id="floatingFabricante" placeholder="Fabricante" required>
+                        <label for="floatingFabricante">Fabricante</label>
                     </div>
                     <div class="form-floating mb-3">
                         <select class="form-select" id="floatingMedicamento" name="isMedicamento" required>
@@ -220,12 +221,48 @@ class gerenciador_estoque{
                 `)
             }
 
-            
+            <?php
+                if($idProduto){
+                    $query = $model->execQuery(
+                        "SELECT
+                            p.descricao, p.fabricante, 
+                            IF(ISNULL(m.id),0,1) isMedicamento,
+                            m.laboratorio,
+                            m.principio_ativo,
+                            m.nome_comercial
+                        FROM produtos p
+                            LEFT JOIN medicamentos m
+                                ON m.id_produto=p.id
+                        WHERE p.id=$idProduto                        "
+                    );
 
-            
+                    $dadosProduto = $query->fetch_assoc();
+                    echo "
+                        $(\"#floatingDescricao\"        ).val('{$dadosProduto['descricao']}');
+                        $(\"#floatingFabricante\"       ).val('{$dadosProduto['fabricante']}');
+                        $(\"#floatingMedicamento\"      ).val('{$dadosProduto['isMedicamento']}').trigger('change');
+                        $(\"#floatingLaboratorio\"      ).val('{$dadosProduto['laboratorio']}');
+                        $(\"#floatingPrincipio\"        ).val('{$dadosProduto['principio_ativo']}');
+                        $(\"#floatingComercial\"        ).val('{$dadosProduto['nome_comercial']}');
+                        ";
+                }
+
+                if($tipo == 'visualizar'){
+                    echo 
+                    "
+                    $(\"#floatingDescricao, #floatingFabricante, #floatingMedicamento, #floatingLaboratorio, #floatingPrincipio, #floatingComercial\").prop('disabled',true)
+                    ";
+                }
+
+                ?>
+
+        
         </script>
         <?php
         $content = ob_get_clean();
-        return $content;
+        if($return){
+            return $content;
+        }
+        echo $content;
     }
 }
