@@ -1,0 +1,10 @@
+TRUNCATE produtos;
+	TRUNCATE medicamentos;
+	TRUNCATE lote;
+	TRUNCATE movimentacoes;
+TRUNCATE pessoas;
+    TRUNCATE usuarios;
+    TRUNCATE pacientes;
+    TRUNCATE funcionario;
+        TRUNCATE farmaceutico;
+        TRUNCATE medico;
