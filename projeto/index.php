@@ -6,11 +6,12 @@
     loadBaseFiles();
 
     $requestFunction = getRequestFunction();
-    if(function_exists($requestFunction))
+    if(function_exists($requestFunction)){
         try {
             $requestFunction();
         }catch(Throwable $t){
             throw new error($t->getMessage(),$t->getCode(),$t);
         }
-    else
+    }else{
         die('Função não conhecida pelo sistema.');
+    }

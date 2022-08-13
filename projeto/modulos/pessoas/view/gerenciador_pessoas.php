@@ -108,7 +108,7 @@ class gerenciador_pessoas{
         $query = $model->execQuery('SELECT id,cargo FROM cargos');
         $htmlCargo = '';
         while($option = $query->fetch_assoc()){
-            $option['cargo'] = ucfirst(strtolower($option['cargo']));
+            $option['cargo'] = ucfirst(mb_strtolower($option['cargo']));
             $htmlCargo .= "<option value=\"{$option['id']}\">{$option['cargo']}</option>";
         }
 
