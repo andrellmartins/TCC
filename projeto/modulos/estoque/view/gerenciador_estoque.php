@@ -23,7 +23,7 @@ class gerenciador_estoque{
         <div class="container">
             <div class="row text-center">
                 <div class="col w-auto">
-                    <button class="btn btn-success" type="button" onclick="window.location='?modulo=estoque&programa=estoque&acao=formInclui'">Incluir</button>
+                    <button class="btn btn-success" type="button" onclick="window.location='?modulo=estoque&programa=estoque&acao=formInclui'">Incluir Produto</button>
                 </div>
             </div>
         </div>
@@ -54,9 +54,10 @@ class gerenciador_estoque{
                     <td><?php echo $row['isMedicamento'] ?></td>
                     <td><?php echo $row['nome']          ?></td>
                     <td>
-                        <button class="btn ml-1 mr-1 mb-1 btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar     </button>
-                        <button class="btn ml-1 mr-1 mb-1 btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar </button>
-                        <button class="btn ml-1 mr-1 mb-1 btn-danger"  onclick="excluirLinha ( <?php echo $row['id'] ?> )" type="button">Excluir    </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-warning" onclick="editarLinha  ( <?php echo $row['id'] ?> )" type="button">Editar          </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-primary" onclick="verLinha     ( <?php echo $row['id'] ?> )" type="button">Visualizar      </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-danger"  onclick="excluirLinha ( <?php echo $row['id'] ?> )" type="button">Excluir         </button>
+                        <button class="btn ml-1 mr-1 mb-1 btn-info"    onclick="verLoteLinha ( <?php echo $row['id'] ?> )" type="button">Gerenciar Lotes </button>
                     </td>
                 </tr>
                     <?php
@@ -95,6 +96,9 @@ class gerenciador_estoque{
                     window.location.href = `?modulo=estoque&programa=estoque&acao=excluirProduto&id=${idLinha}`;
                 })
             }
+            function verLoteLinha( idLinha ){
+                window.location.href = `?modulo=estoque&programa=estoque&acao=formGerenciarLoteProduto&id=${idLinha}`;
+            }
         </script>
         <?php
         return ob_get_clean();
@@ -104,7 +108,7 @@ class gerenciador_estoque{
         ob_start();
         ?>
         <form action="<?php echo $acaoForm ?>" method="post">
-            <div class="container w-50 self-align-middle">
+            <div class="container self-align-middle">
                 <div class="row text-center">
                     <div class="form-floating mb-3">
                         <input type="Input" class="form-control" name="descricao" id="floatingDescricao" placeholder="Descricao" required>
@@ -134,22 +138,53 @@ class gerenciador_estoque{
                         <input type="Input" class="form-control" name="comercial" id="floatingComercial" placeholder="Comercial" required>
                         <label for="floatingComercial">Nome Comercial</label>
                     </div>
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-3 componente-lote">
                         <table class="table" id="tabelaItensLote">
                             <thead>
                                 <tr>
                                     <th>Lote</th>
                                     <th>Validade</th>
-                                    <th>Quantidade</th>
+                                    <th>Quantidade Inicial</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php
+                            if($idProduto){
+                                $query = $model->execQuery("
+                                SELECT  l.lote, 
+                                        l.validade
+                                        , ( 
+                                            SELECT
+                                                m.qtd 
+                                            FROM movimentacoes m 
+                                            WHERE m.id_produto={$idProduto} 
+                                                AND id_lote=l.id
+                                            ORDER BY m.id ASC
+                                            LIMIT 1
+                                        ) as qtd
+                                FROM lote l 
+                                WHERE l.id_produto={$idProduto}
+                                ");
+                                while($lote = $query->fetch_assoc()){
+                                    echo "
+                                <tr>
+                                    <td>{$lote['lote']}</td>
+                                    <td>{$lote['validade']}</td>
+                                    <td>{$lote['qtd']}</td>
+                                    <td></td>
+                                </tr>
+                                    ";
+                                }
+
+                            }
+                                ?>
                             </tbody>
                         </table>
                     </div>
-                    <div class="form-floating mb-3">
-                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()">Novo Lote</button>
+                    <div class="form-floating mb-3 componente-lote">
+                        <button class="btn btn-primary" type="button" onclick="novaLinhaLote()"  > Novo Lote  </button>
+                        <button class="btn btn-success" type="submit"                            > Salvar     </button>
                     </div>
                     <div class="form-floating mb-3">
                             <?php
@@ -175,20 +210,20 @@ class gerenciador_estoque{
                     <tr class="linhaLote">
                         <td>
                             <div class="form-floating mb-3">
-                                <input type="Input" class="form-control" name="lote[${idLinha}]" id="floatingLote${idLinha}" placeholder="Lote" required>
+                                <input type="Input" class="form-control" name="lotes[${idLinha}][lote]" id="floatingLote${idLinha}" placeholder="Lote" required>
                                 <label for="floatingLote${idLinha}">Lote</label>
                             </div>
                         </td>
                         <td>
                             <div class="form-floating mb-3">
-                                <input type="Date" class="form-control" name="validade[${idLinha}]" id="floatingValidade${idLinha}" placeholder="Validade" required>
+                                <input type="Date" class="form-control" name="lotes[${idLinha}][validade]" id="floatingValidade${idLinha}" placeholder="Validade" required>
                                 <label for="floatingValidade${idLinha}">Data de Validade</label>
                             </div>
                         </td>
                         <td>
                             <div class="form-floating mb-3">
-                                <input type="number" min="1" class="form-control" name="qtd[${idLinha}]" id="floatingQtd${idLinha}" placeholder="Quantidade" required>
-                                <label for="floatingQtd${idLinha}">Quantidade</label>
+                                <input type="number" min="1" class="form-control" name="lotes[${idLinha}][qtd]" id="floatingQtd${idLinha}" placeholder="Quantidade Inicial" required>
+                                <label for="floatingQtd${idLinha}">Quantidade Inicial</label>
                             </div>
                         </td>
                         <td>
@@ -198,7 +233,6 @@ class gerenciador_estoque{
                     
                     `)
                 }
-                            
 
             $(()=>{
                 $("#floatingMedicamento").on('change',(evento)=>{
@@ -213,13 +247,6 @@ class gerenciador_estoque{
                     mostrarCamposForm(enable)
                     esconderCamposForm(disable)
                 }).trigger('change')
-
-                
-          
-
-                            
-
-               
 
                 <?php
                     if($idProduto){
@@ -246,15 +273,18 @@ class gerenciador_estoque{
                             $(\"#floatingComercial\"        ).val('{$dadosProduto['nome_comercial']}');
                             $(\"#floatingMedicamento\"      ).trigger('change').prop('disabled',true);
                             ";
-                            if($tipo == 'visualizar'){
+                            if(in_array($tipo,['visualizar','gerenciarLote'])){
                                 echo 
                                 "
                                 $(\"#floatingDescricao, #floatingFabricante, #floatingMedicamento, #floatingLaboratorio, #floatingPrincipio, #floatingComercial\").prop('disabled',true)
                                 ";
                             }
-            
-                            
-                    }
+                        }
+                        if($tipo != 'gerenciarLote'){
+                            echo "
+                            $(\".componente-lote\").hide();
+                        ";
+                        }
                     
                     ?>
             })

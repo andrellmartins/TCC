@@ -1,9 +1,15 @@
 <?php 
 class estoque extends model{
+    public function isProdutoValido($idProduto){
+        $queryProduto = $this->execQuery("SELECT 1 FROM produtos p WHERE p.id={$idProduto} AND p.deletado=FALSE");
+        if($queryProduto->num_rows == 0){
+            throw new Exception('Produto não existe');
+        }
+    }
+
     public function incluir($dados){
         $this->begin_transaction();
         
-
         $this->execQuery(
             "INSERT INTO produtos(descricao, fabricante, id_func_cadastro) VALUES 
             ('{$dados['descricao']}', '{$dados['fabricante']}', {$dados['id_funcionario']})
@@ -27,10 +33,7 @@ class estoque extends model{
     public function excluir($id){
         $this->begin_transaction();
         
-        $queryProduto = $this->execQuery("SELECT * FROM produtos p WHERE p.id=$id AND p.deletado=FALSE");
-        if($queryProduto->num_rows == 0){
-            throw new Exception('Produto não existe');
-        }
+        $this->isProdutoValido($id);
 
         $this->execQuery("
             UPDATE produtos SET deletado=TRUE WHERE id=$id
@@ -45,32 +48,32 @@ class estoque extends model{
     }
 
     public function alterar($dados){
+        $this->begin_transaction();
+
+        $this->isProdutoValido($dados['id']);
+
+        $this->execQuery(
+            "UPDATE produtos
+                SET descricao = '{$dados['descricao']}',
+                    fabricante = '{$dados['fabricante']}'
+            WHERE id={$dados['id']}"
+        );
         
-            $this->begin_transaction();
-    
+        $idMedicamento = $this->execQuery('SELECT id FROM medicamentos WHERE id_produto='.$dados['id']) -> fetch_assoc()['id'];
+
+
+        if($dados['isMedicamento'] == 1){
             $this->execQuery(
-                "UPDATE produtos
-                    SET descricao = '{$dados['descricao']}',
-                        fabricante = '{$dados['fabricante']}'
-                WHERE id={$dados['id']}"
+                "UPDATE medicamentos
+                    SET laboratorio = '{$dados['laboratorio']}', 
+                        nome_comercial = '{$dados['comercial']}',
+                        principio_ativo = '{$dados['principio']}'
+                WHERE id=$idMedicamento
+                "
             );
-            
-            $idMedicamento = $this->execQuery('SELECT id FROM medicamentos WHERE id_produto='.$dados['id']) -> fetch_assoc()['id'];
-    
-    
-            if($dados['isMedicamento'] == 1){
-                $this->execQuery(
-                    "UPDATE medicamentos
-                        SET laboratorio = '{$dados['laboratorio']}', 
-                            nome_comercial = '{$dados['comercial']}',
-                            principio_ativo = '{$dados['principio']}'
-                    WHERE id=$idMedicamento
-                    "
-                );
-            }
-    
-            $this->commit();
-            return true;
-        }     
-    
+        }
+
+        $this->commit();
+        return true;
+    }     
 }

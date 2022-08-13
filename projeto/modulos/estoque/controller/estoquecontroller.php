@@ -41,6 +41,16 @@ class estoquecontroller extends crudcontroller{
         $interface->setContent($navbar . $formCadastro);
         $interface->render();
     }
+    
+    public function formGerenciarLoteProduto(){
+        $formCadastro = gerenciador_estoque::returnCadastroProduto(true,'gerenciarLote','?modulo=estoque&programa=estoque&acao=incluiLote&id='.$this->get['id'],$this->get['id']);
+        $navbar = Navbar::render(true);
+
+        $interface = new interfacePadrao;
+        $interface->setTitulo('Gerenciador de Estoque - Gerenciar Lotes');
+        $interface->setContent($navbar . $formCadastro);
+        $interface->render();
+    }
 
 /*------FIM DA AREA DOS FORMS DE ESTOQUE */
 
@@ -76,6 +86,17 @@ class estoquecontroller extends crudcontroller{
             mensagensPadroes_estoque::alterarBemSucedido($this->post);
         }catch(Throwable $t){
             mensagensPadroes_estoque::erroNaAlteracao($t->getMessage());
+        }
+    }
+  
+    public function incluiLote(){
+        try{
+            $funcionario = instanceClassFromModulo('pessoas','funcionario') -> getFuncionarioByIdPessoa($_SESSION['usuarioLogado']['id_pessoa']);
+            $lote = new lote;
+            $lote->incluiLote($this->get['id'],$funcionario['id'],$this->post['lotes']);
+            mensagensPadroes_estoque::sucessoNaInclusaoLote($this->post);
+        }catch(Throwable $t){
+            mensagensPadroes_estoque::erroNaInclusaoLote($t->getMessage());
         }
     }
 
