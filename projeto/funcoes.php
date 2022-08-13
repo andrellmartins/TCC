@@ -76,7 +76,7 @@ function tratarRequisicaoReqview(){
     if(file_exists($path)){
         echo file_get_contents($path);
     }else{
-        die('programa não existe');
+        die('arquivo não existe');
     }
 
 }
