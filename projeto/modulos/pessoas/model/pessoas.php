@@ -4,8 +4,8 @@ class pessoas extends model{
     public function incluir($dados){
         $this->begin_transaction();
         $this->execQuery(
-            "INSERT INTO pessoas(nome,ender, telefone,cpf,sexo,data_nasc) VALUES 
-            ('{$dados['nome']}','{$dados['endereco']}','{'{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
+            "INSERT INTO pessoas(nome,ender, telefone, cpf, sexo, data_nasc) VALUES 
+            ('{$dados['nome']}','{$dados['endereco']}','{$dados['telefone']}','{$dados['cpf']}','{$dados['sexo']}','{$dados['nascimento']}')"
         );
         
         $idPessoa = $this->insert_id;
@@ -87,8 +87,7 @@ class pessoas extends model{
                 telefone='{$dados['telefone']}',
                 cpf='{$dados['cpf']}',
                 sexo='{$dados['sexo']}',
-                data_nasc='{$dados['nascimento']}',
-                time_futebol='{$dados['time_futebol']}'
+                data_nasc='{$dados['nascimento']}'
             WHERE id={$dados['id']}"
         );
         if(!is_null($pessoaAtual['id_usuario'])){

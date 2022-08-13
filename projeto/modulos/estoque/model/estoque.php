@@ -44,10 +44,33 @@ class estoque extends model{
         return true;
     }
 
-    public function alterar($id){
+    public function alterar($dados){
         
-    }
-
+            $this->begin_transaction();
     
+            $this->execQuery(
+                "UPDATE produtos
+                    SET descricao = '{$dados['descricao']}',
+                        fabricante = '{$dados['fabricante']}'
+                WHERE id={$dados['id']}"
+            );
+            
+            $idMedicamento = $this->execQuery('SELECT id FROM medicamentos WHERE id_produto='.$dados['id']) -> fetch_assoc()['id'];
+    
+    
+            if($dados['isMedicamento'] == 1){
+                $this->execQuery(
+                    "UPDATE medicamentos
+                        SET laboratorio = '{$dados['laboratorio']}', 
+                            nome_comercial = '{$dados['comercial']}',
+                            principio_ativo = '{$dados['principio']}'
+                    WHERE id=$idMedicamento
+                    "
+                );
+            }
+    
+            $this->commit();
+            return true;
+        }     
     
 }

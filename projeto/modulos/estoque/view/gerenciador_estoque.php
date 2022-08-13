@@ -169,8 +169,36 @@ class gerenciador_estoque{
             </div>
         </form>
         <script>
-
-            
+                function novaLinhaLote(){
+                    let idLinha = $("#tabelaItensLote > tbody > tr").length + 1;
+                    $("#tabelaItensLote > tbody").append(`
+                    <tr class="linhaLote">
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="Input" class="form-control" name="lote[${idLinha}]" id="floatingLote${idLinha}" placeholder="Lote" required>
+                                <label for="floatingLote${idLinha}">Lote</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="Date" class="form-control" name="validade[${idLinha}]" id="floatingValidade${idLinha}" placeholder="Validade" required>
+                                <label for="floatingValidade${idLinha}">Data de Validade</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="number" min="1" class="form-control" name="qtd[${idLinha}]" id="floatingQtd${idLinha}" placeholder="Quantidade" required>
+                                <label for="floatingQtd${idLinha}">Quantidade</label>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="$(this).closest('.linhaLote').remove()">X</button>
+                        </td>
+                    </tr>
+                    
+                    `)
+                }
+                            
 
             $(()=>{
                 $("#floatingMedicamento").on('change',(evento)=>{
@@ -187,74 +215,49 @@ class gerenciador_estoque{
                 }).trigger('change')
 
                 
-            })
+          
 
                             
 
-            function novaLinhaLote(){
-                let idLinha = $("#tabelaItensLote > tbody > tr").length + 1;
-                $("#tabelaItensLote > tbody").append(`
-                <tr class="linhaLote">
-                    <td>
-                        <div class="form-floating mb-3">
-                            <input type="Input" class="form-control" name="lote[${idLinha}]" id="floatingLote${idLinha}" placeholder="Lote" required>
-                            <label for="floatingLote${idLinha}">Lote</label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-floating mb-3">
-                            <input type="Date" class="form-control" name="validade[${idLinha}]" id="floatingValidade${idLinha}" placeholder="Validade" required>
-                            <label for="floatingValidade${idLinha}">Data de Validade</label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-floating mb-3">
-                            <input type="number" min="1" class="form-control" name="qtd[${idLinha}]" id="floatingQtd${idLinha}" placeholder="Quantidade" required>
-                            <label for="floatingQtd${idLinha}">Quantidade</label>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" onclick="$(this).closest('.linhaLote').remove()">X</button>
-                    </td>
-                </tr>
-                
-                `)
-            }
+               
 
-            <?php
-                if($idProduto){
-                    $query = $model->execQuery(
-                        "SELECT
-                            p.descricao, p.fabricante, 
-                            IF(ISNULL(m.id),0,1) isMedicamento,
-                            m.laboratorio,
-                            m.principio_ativo,
-                            m.nome_comercial
-                        FROM produtos p
-                            LEFT JOIN medicamentos m
-                                ON m.id_produto=p.id
-                        WHERE p.id=$idProduto                        "
-                    );
+                <?php
+                    if($idProduto){
+                        $query = $model->execQuery(
+                            "SELECT
+                                p.descricao, p.fabricante, 
+                                IF(ISNULL(m.id),0,1) isMedicamento,
+                                m.laboratorio,
+                                m.principio_ativo,
+                                m.nome_comercial
+                            FROM produtos p
+                                LEFT JOIN medicamentos m
+                                    ON m.id_produto=p.id
+                            WHERE p.id=$idProduto                        "
+                        );
 
-                    $dadosProduto = $query->fetch_assoc();
-                    echo "
-                        $(\"#floatingDescricao\"        ).val('{$dadosProduto['descricao']}');
-                        $(\"#floatingFabricante\"       ).val('{$dadosProduto['fabricante']}');
-                        $(\"#floatingMedicamento\"      ).val('{$dadosProduto['isMedicamento']}').trigger('change');
-                        $(\"#floatingLaboratorio\"      ).val('{$dadosProduto['laboratorio']}');
-                        $(\"#floatingPrincipio\"        ).val('{$dadosProduto['principio_ativo']}');
-                        $(\"#floatingComercial\"        ).val('{$dadosProduto['nome_comercial']}');
-                        ";
-                }
-
-                if($tipo == 'visualizar'){
-                    echo 
-                    "
-                    $(\"#floatingDescricao, #floatingFabricante, #floatingMedicamento, #floatingLaboratorio, #floatingPrincipio, #floatingComercial\").prop('disabled',true)
-                    ";
-                }
-
-                ?>
+                        $dadosProduto = $query->fetch_assoc();
+                        echo "
+                            $(\"#floatingDescricao\"        ).val('{$dadosProduto['descricao']}');
+                            $(\"#floatingFabricante\"       ).val('{$dadosProduto['fabricante']}');
+                            $(\"#floatingMedicamento\"      ).val('{$dadosProduto['isMedicamento']}');
+                            $(\"#floatingLaboratorio\"      ).val('{$dadosProduto['laboratorio']}');
+                            $(\"#floatingPrincipio\"        ).val('{$dadosProduto['principio_ativo']}');
+                            $(\"#floatingComercial\"        ).val('{$dadosProduto['nome_comercial']}');
+                            $(\"#floatingMedicamento\"      ).trigger('change').prop('disabled',true);
+                            ";
+                            if($tipo == 'visualizar'){
+                                echo 
+                                "
+                                $(\"#floatingDescricao, #floatingFabricante, #floatingMedicamento, #floatingLaboratorio, #floatingPrincipio, #floatingComercial\").prop('disabled',true)
+                                ";
+                            }
+            
+                            
+                    }
+                    
+                    ?>
+            })
 
         
         </script>

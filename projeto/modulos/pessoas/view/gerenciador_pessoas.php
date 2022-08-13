@@ -338,21 +338,16 @@ class gerenciador_pessoas{
                         $(\"#floatingUsuario\"     ).val('{$dadosPessoa['usuario']}');
                         $(\"#floatingSexo\"        ).val('{$dadosPessoa['sexo']}');
                         $(\"#floatingNascimento\"  ).val('{$dadosPessoa['data_nasc']}');
+                        $(\"#floatingTipo, #floatingCargo\").prop('disabled',true);
                         ";
+                        if($tipo == 'visualizar'){
+                            echo 
+                            "
+                            $(\"#floatingNome, #floatingEndereço, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha, #floatingSexo, #floatingNascimento\").prop('disabled',true)
+                            ";
+                        }
                 }
 
-                if($tipo == 'visualizar'){
-                    echo 
-                    "
-                    $(\"#floatingNome, #floatingEndereço, #floatingTelefone, #floatingCpf, #floatingTipo, #floatingPis, #floatingCargo, #floatingCrm, #floatingCrf, #floatingUf, #floatingConvenio, #floatingUsuario, #floatingSenha, #floatingSexo, #floatingNascimento\").prop('disabled',true)
-                    ";
-                }
-
-                if($tipo != 'login' && $tipo != 'inclui'){
-                    echo "
-                    $(\"#floatingTipo, #floatingCargo\").prop('disabled',true)
-                    ";
-                }
                 ?>
 
             })
